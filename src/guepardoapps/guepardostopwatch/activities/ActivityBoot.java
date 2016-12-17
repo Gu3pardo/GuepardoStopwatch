@@ -1,20 +1,27 @@
-package guepardoapps.guepardostopwatch;
-
-import guepardoapps.common.*;
-import guepardoapps.toolset.controller.*;
+package guepardoapps.guepardostopwatch.activities;
 
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.util.Log;
+
+import guepardoapps.guepardostopwatch.R;
+import guepardoapps.guepardostopwatch.common.*;
+
+import guepardoapps.toolset.common.Logger;
+import guepardoapps.toolset.controller.SharedPrefController;
+import guepardoapps.toolset.services.AndroidSystemService;
+import guepardoapps.toolset.services.NavigationService;
 
 public class ActivityBoot extends Activity {
 
+	private static final String TAG = ActivityBoot.class.getName();
+	private Logger _logger;
+
 	private Context _context;
-	
-	private CheckController _checkController;
-	private NavigationController _navigationController;
+
+	private AndroidSystemService _androidSystemService;
+	private NavigationService _navigationService;
 	private SharedPrefController _sharedPrefController;
 
 	@Override
@@ -23,9 +30,12 @@ public class ActivityBoot extends Activity {
 		setContentView(R.layout.side_boot);
 		getActionBar().setBackgroundDrawable(new ColorDrawable(Constants.ACTION_BAR_COLOR));
 
+		_logger = new Logger(TAG, Constants.DEBUGGING_ENABLED);
+
 		_context = this;
-		_checkController = new CheckController(_context);
-		_navigationController = new NavigationController(_context);
+
+		_androidSystemService = new AndroidSystemService(_context);
+		_navigationService = new NavigationService(_context);
 		_sharedPrefController = new SharedPrefController(_context, Constants.SHARED_PREF_NAME);
 
 		if (!_sharedPrefController.LoadBooleanValueFromSharedPreferences(Constants.SHARED_PREF_NAME)) {
@@ -37,13 +47,13 @@ public class ActivityBoot extends Activity {
 
 	protected void onResume() {
 		super.onResume();
-		if (_checkController.CurrentAndroidApi() >= android.os.Build.VERSION_CODES.M) {
-			Log.d("stopwatch", "asking for permission");
-			if (_checkController.CheckAPI23SystemPermission(Constants.PERMISSION_REQUEST_CODE)) {
-				_navigationController.NavigateTo(ActivityMain.class, true);
+		if (_androidSystemService.CurrentAndroidApi() >= android.os.Build.VERSION_CODES.M) {
+			_logger.Debug("asking for permission");
+			if (_androidSystemService.CheckAPI23SystemPermission(Constants.PERMISSION_REQUEST_CODE)) {
+				_navigationService.NavigateTo(ActivityMain.class, true);
 			}
 		} else {
-			_navigationController.NavigateTo(ActivityMain.class, true);
+			_navigationService.NavigateTo(ActivityMain.class, true);
 		}
 	}
 

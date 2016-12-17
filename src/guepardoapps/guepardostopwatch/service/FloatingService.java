@@ -1,4 +1,4 @@
-package guepardoapps.service;
+package guepardoapps.guepardostopwatch.service;
 
 import android.app.Service;
 import android.content.Context;
@@ -19,16 +19,17 @@ import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import guepardoapps.common.Constants;
-import guepardoapps.toolset.controller.MailController;
-import guepardoapps.toolset.controller.SharedPrefController;
 import guepardoapps.guepardostopwatch.R;
+import guepardoapps.guepardostopwatch.common.Constants;
+
+import guepardoapps.toolset.controller.SharedPrefController;
+import guepardoapps.toolset.services.MailService;
 
 public class FloatingService extends Service {
 
 	private Context _context;
 	private SharedPrefController _sharedPrefController;
-	private MailController _mailController;
+	private MailService _mailService;
 
 	private WindowManager _bubbleViewManager;
 	private ImageView _bubble;
@@ -61,6 +62,33 @@ public class FloatingService extends Service {
 	private long _finalTime = 0L;
 	private int _finalSeconds, _finalMinutes, _finalMilliSeconds;
 
+	private Runnable _updateTimerMethod = new Runnable() {
+
+		public void run() {
+			_roundTimeInMillies = SystemClock.uptimeMillis() - _roundStartTime;
+			_roundTime = _roundTimeSwap + _roundTimeInMillies;
+
+			_roundSeconds = (int) (_roundTime / 1000);
+			_roundMinutes = _roundSeconds / 60;
+			_roundSeconds = _roundSeconds % 60;
+			_roundMilliSeconds = (int) (_roundTime % 1000);
+
+			_timeInMilliesFinal = SystemClock.uptimeMillis() - _startTimeFinal;
+			_finalTime = _timeSwapFinal + _timeInMilliesFinal;
+
+			_finalSeconds = (int) (_finalTime / 1000);
+			_finalMinutes = _finalSeconds / 60;
+			_finalSeconds = _finalSeconds % 60;
+			_finalMilliSeconds = (int) (_finalTime % 1000);
+
+			_minuteView.setText("" + _finalMinutes);
+			_secondsView.setText("" + String.format("%02d", _finalSeconds));
+			_milliSecondsView.setText("" + String.format("%03d", _finalMilliSeconds));
+
+			_stopwatchHandler.postDelayed(this, 0);
+		}
+	};
+
 	@Override
 	public IBinder onBind(Intent intent) {
 		return null;
@@ -72,7 +100,7 @@ public class FloatingService extends Service {
 
 		_context = this;
 		_sharedPrefController = new SharedPrefController(_context, Constants.SHARED_PREF_NAME);
-		_mailController = new MailController(_context);
+		_mailService = new MailService(_context);
 
 		_stopwatchHandler = new Handler();
 		_round = 1;
@@ -279,7 +307,7 @@ public class FloatingService extends Service {
 			public void onClick(View view) {
 				String times = _btnExport.getText().toString();
 				if (times != null) {
-					_mailController.SendMailWithContent("Times", times);
+					_mailService.SendMailWithContent("Times", times, true);
 				}
 			}
 		});
@@ -306,31 +334,4 @@ public class FloatingService extends Service {
 
 		_stopwatchViewManager.addView(_stopwatchView, layoutParams);
 	}
-
-	private Runnable _updateTimerMethod = new Runnable() {
-
-		public void run() {
-			_roundTimeInMillies = SystemClock.uptimeMillis() - _roundStartTime;
-			_roundTime = _roundTimeSwap + _roundTimeInMillies;
-
-			_roundSeconds = (int) (_roundTime / 1000);
-			_roundMinutes = _roundSeconds / 60;
-			_roundSeconds = _roundSeconds % 60;
-			_roundMilliSeconds = (int) (_roundTime % 1000);
-
-			_timeInMilliesFinal = SystemClock.uptimeMillis() - _startTimeFinal;
-			_finalTime = _timeSwapFinal + _timeInMilliesFinal;
-
-			_finalSeconds = (int) (_finalTime / 1000);
-			_finalMinutes = _finalSeconds / 60;
-			_finalSeconds = _finalSeconds % 60;
-			_finalMilliSeconds = (int) (_finalTime % 1000);
-
-			_minuteView.setText("" + _finalMinutes);
-			_secondsView.setText("" + String.format("%02d", _finalSeconds));
-			_milliSecondsView.setText("" + String.format("%03d", _finalMilliSeconds));
-
-			_stopwatchHandler.postDelayed(this, 0);
-		}
-	};
 }

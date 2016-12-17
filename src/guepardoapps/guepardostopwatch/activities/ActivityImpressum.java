@@ -1,13 +1,13 @@
-package guepardoapps.guepardostopwatch;
+package guepardoapps.guepardostopwatch.activities;
 
 import android.app.Activity;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 
-import guepardoapps.common.Constants;
+import guepardoapps.guepardostopwatch.R;
+import guepardoapps.guepardostopwatch.common.Constants;
 
 public class ActivityImpressum extends Activity {
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);

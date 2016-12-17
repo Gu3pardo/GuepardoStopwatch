@@ -1,4 +1,4 @@
-package guepardoapps.guepardostopwatch;
+package guepardoapps.guepardostopwatch.activities;
 
 import android.app.Activity;
 import android.content.Context;
@@ -15,18 +15,22 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import guepardoapps.common.*;
-import guepardoapps.toolset.controller.*;
 import guepardoapps.guepardostopwatch.R;
-import guepardoapps.service.FloatingService;
+import guepardoapps.guepardostopwatch.common.*;
+import guepardoapps.guepardostopwatch.service.FloatingService;
+
+import guepardoapps.toolset.controller.*;
+import guepardoapps.toolset.services.AndroidSystemService;
+import guepardoapps.toolset.services.MailService;
+import guepardoapps.toolset.services.NavigationService;
 
 public class ActivityMain extends Activity {
 
 	private Context _context;
 
-	private CheckController _checkController;
-	private MailController _mailController;
-	private NavigationController _navigationController;
+	private AndroidSystemService _androidSystemService;
+	private MailService _mailService;
+	private NavigationService _navigationService;
 	private SharedPrefController _sharedPrefController;
 
 	private Class<FloatingService> _floatingService;
@@ -38,7 +42,7 @@ public class ActivityMain extends Activity {
 	private ScrollView _scrollView;
 
 	private boolean _isRunning;
-	int _round;
+	private int _round;
 	private Handler _stopwatchHandler;
 
 	private long _roundStartTime = 0L;
@@ -53,6 +57,32 @@ public class ActivityMain extends Activity {
 	private long _finalTime = 0L;
 	private int _finalSeconds, _finalMinutes, _finalMilliSeconds;
 
+	private Runnable _updateTimerMethod = new Runnable() {
+		public void run() {
+			_roundTimeInMillies = SystemClock.uptimeMillis() - _roundStartTime;
+			_roundTime = _roundTimeSwap + _roundTimeInMillies;
+
+			_roundSeconds = (int) (_roundTime / 1000);
+			_roundMinutes = _roundSeconds / 60;
+			_roundSeconds = _roundSeconds % 60;
+			_roundMilliSeconds = (int) (_roundTime % 1000);
+
+			_timeInMilliesFinal = SystemClock.uptimeMillis() - _startTimeFinal;
+			_finalTime = _timeSwapFinal + _timeInMilliesFinal;
+
+			_finalSeconds = (int) (_finalTime / 1000);
+			_finalMinutes = _finalSeconds / 60;
+			_finalSeconds = _finalSeconds % 60;
+			_finalMilliSeconds = (int) (_finalTime % 1000);
+
+			_minuteView.setText("" + _finalMinutes);
+			_secondsView.setText("" + String.format("%02d", _finalSeconds));
+			_milliSecondsView.setText("" + String.format("%03d", _finalMilliSeconds));
+
+			_stopwatchHandler.postDelayed(this, 0);
+		}
+	};
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -61,9 +91,9 @@ public class ActivityMain extends Activity {
 
 		_context = this;
 
-		_checkController = new CheckController(_context);
-		_mailController = new MailController(_context);
-		_navigationController = new NavigationController(_context);
+		_androidSystemService = new AndroidSystemService(_context);
+		_mailService = new MailService(_context);
+		_navigationService = new NavigationService(_context);
 		_sharedPrefController = new SharedPrefController(_context, Constants.SHARED_PREF_NAME);
 
 		_floatingService = FloatingService.class;
@@ -162,7 +192,7 @@ public class ActivityMain extends Activity {
 			public void onClick(View view) {
 				String times = _btnExport.getText().toString();
 				if (times != null) {
-					_mailController.SendMailWithContent("Times", times);
+					_mailService.SendMailWithContent("Times", times, false);
 				}
 			}
 		});
@@ -182,7 +212,7 @@ public class ActivityMain extends Activity {
 			@Override
 			public void onClick(View view) {
 				if (!_isRunning) {
-					_navigationController.NavigateTo(ActivityImpressum.class, false);
+					_navigationService.NavigateTo(ActivityImpressum.class, false);
 				} else {
 					Toast.makeText(_context, "Stopwatch is running!", Toast.LENGTH_SHORT).show();
 				}
@@ -206,7 +236,7 @@ public class ActivityMain extends Activity {
 			@Override
 			public void onClick(View view) {
 				if (!_isRunning) {
-					_navigationController.NavigateTo(ActivitySettings.class, false);
+					_navigationService.NavigateTo(ActivitySettings.class, false);
 				} else {
 					Toast.makeText(_context, "Stopwatch is running!", Toast.LENGTH_SHORT).show();
 				}
@@ -237,42 +267,15 @@ public class ActivityMain extends Activity {
 	}
 
 	private void tryToStartService() {
-		if (!_checkController.IsServiceRunning(_floatingService)
+		if (!_androidSystemService.IsServiceRunning(_floatingService)
 				&& _sharedPrefController.LoadBooleanValueFromSharedPreferences(Constants.BUBBLE_STATE)) {
 			startService(new Intent(_context, _floatingService));
 		}
 	}
 
 	private void tryToStopService() {
-		if (_checkController.IsServiceRunning(_floatingService)) {
+		if (_androidSystemService.IsServiceRunning(_floatingService)) {
 			stopService(new Intent(_context, _floatingService));
 		}
 	}
-
-	private Runnable _updateTimerMethod = new Runnable() {
-
-		public void run() {
-			_roundTimeInMillies = SystemClock.uptimeMillis() - _roundStartTime;
-			_roundTime = _roundTimeSwap + _roundTimeInMillies;
-
-			_roundSeconds = (int) (_roundTime / 1000);
-			_roundMinutes = _roundSeconds / 60;
-			_roundSeconds = _roundSeconds % 60;
-			_roundMilliSeconds = (int) (_roundTime % 1000);
-
-			_timeInMilliesFinal = SystemClock.uptimeMillis() - _startTimeFinal;
-			_finalTime = _timeSwapFinal + _timeInMilliesFinal;
-
-			_finalSeconds = (int) (_finalTime / 1000);
-			_finalMinutes = _finalSeconds / 60;
-			_finalSeconds = _finalSeconds % 60;
-			_finalMilliSeconds = (int) (_finalTime % 1000);
-
-			_minuteView.setText("" + _finalMinutes);
-			_secondsView.setText("" + String.format("%02d", _finalSeconds));
-			_milliSecondsView.setText("" + String.format("%03d", _finalMilliSeconds));
-
-			_stopwatchHandler.postDelayed(this, 0);
-		}
-	};
 }
