@@ -20,16 +20,16 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import guepardoapps.guepardostopwatch.R;
-import guepardoapps.guepardostopwatch.common.Constants;
+import guepardoapps.guepardostopwatch.common.*;
 
+import guepardoapps.toolset.controller.MailController;
 import guepardoapps.toolset.controller.SharedPrefController;
-import guepardoapps.toolset.services.MailService;
 
 public class FloatingService extends Service {
 
 	private Context _context;
+	private MailController _mailController;
 	private SharedPrefController _sharedPrefController;
-	private MailService _mailService;
 
 	private WindowManager _bubbleViewManager;
 	private ImageView _bubble;
@@ -99,14 +99,14 @@ public class FloatingService extends Service {
 		super.onCreate();
 
 		_context = this;
-		_sharedPrefController = new SharedPrefController(_context, Constants.SHARED_PREF_NAME);
-		_mailService = new MailService(_context);
+		_mailController = new MailController(_context);
+		_sharedPrefController = new SharedPrefController(_context, SharedPrefConstants.SHARED_PREF_NAME);
 
 		_stopwatchHandler = new Handler();
 		_round = 1;
 		_isRunning = false;
 
-		_bubblePosY = _sharedPrefController.LoadIntegerValueFromSharedPreferences(Constants.BUBBLE_POS_Y);
+		_bubblePosY = _sharedPrefController.LoadIntegerValueFromSharedPreferences(SharedPrefConstants.BUBBLE_POS_Y);
 
 		_bubbleViewManager = (WindowManager) getSystemService(WINDOW_SERVICE);
 
@@ -172,7 +172,7 @@ public class FloatingService extends Service {
 					params.x = 0;
 					_bubblePosY = params.y;
 
-					_sharedPrefController.SaveIntegerValue(Constants.BUBBLE_POS_Y, _bubblePosY);
+					_sharedPrefController.SaveIntegerValue(SharedPrefConstants.BUBBLE_POS_Y, _bubblePosY);
 
 					_bubbleParamsStore = params;
 					_bubbleViewManager.updateViewLayout(_bubble, _bubbleParamsStore);
@@ -307,7 +307,7 @@ public class FloatingService extends Service {
 			public void onClick(View view) {
 				String times = _btnExport.getText().toString();
 				if (times != null) {
-					_mailService.SendMailWithContent("Times", times, true);
+					_mailController.SendMailWithContent("Times", times, true);
 				}
 			}
 		});

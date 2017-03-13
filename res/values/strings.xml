@@ -1,8 +1,6 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
 <resources>
-
     <string name="app_name">Guepardo Stopwatch</string>
-
     <string name="time">Times:</string>
     <string name="timev">timevalues</string>
     <string name="clear">Clear</string>
@@ -12,12 +10,10 @@
     <string name="dummyTime">00</string>
     <string name="separator">:</string>
     <string name="close">X</string>
-    
     <string name="set_bubble_state">Activate floating stopwatch</string>
-    
     <string name="impressum">Impressum</string>
-    <string name="impressumContent">Jonas Schubert\nGuepardoApps\nE-Mail: guepardoapps@gmail.com</string>
-    
+    <string name="author">Jonas Schubert\nGuepardoApps</string>
+    <string name="email">E-Mail: guepardoapps@gmail.com</string>
+    <string name="githubLink">https://github.com/Gu3pardo/GuepardoStopwatch/</string>
     <string name="contentDescription">This is a image</string>
-    
 </resources>

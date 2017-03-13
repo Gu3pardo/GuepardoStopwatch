@@ -15,22 +15,24 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import es.dmoral.toasty.Toasty;
+
 import guepardoapps.guepardostopwatch.R;
 import guepardoapps.guepardostopwatch.common.*;
 import guepardoapps.guepardostopwatch.service.FloatingService;
 
-import guepardoapps.toolset.controller.*;
-import guepardoapps.toolset.services.AndroidSystemService;
-import guepardoapps.toolset.services.MailService;
-import guepardoapps.toolset.services.NavigationService;
+import guepardoapps.toolset.controller.AndroidSystemController;
+import guepardoapps.toolset.controller.MailController;
+import guepardoapps.toolset.controller.NavigationController;
+import guepardoapps.toolset.controller.SharedPrefController;
 
 public class ActivityMain extends Activity {
 
 	private Context _context;
 
-	private AndroidSystemService _androidSystemService;
-	private MailService _mailService;
-	private NavigationService _navigationService;
+	private AndroidSystemController _androidSystemController;
+	private MailController _mailController;
+	private NavigationController _navigationController;
 	private SharedPrefController _sharedPrefController;
 
 	private Class<FloatingService> _floatingService;
@@ -87,14 +89,14 @@ public class ActivityMain extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.side_main);
-		getActionBar().setBackgroundDrawable(new ColorDrawable(Constants.ACTION_BAR_COLOR));
+		getActionBar().setBackgroundDrawable(new ColorDrawable(Colors.ACTION_BAR_COLOR));
 
 		_context = this;
 
-		_androidSystemService = new AndroidSystemService(_context);
-		_mailService = new MailService(_context);
-		_navigationService = new NavigationService(_context);
-		_sharedPrefController = new SharedPrefController(_context, Constants.SHARED_PREF_NAME);
+		_androidSystemController = new AndroidSystemController(_context);
+		_mailController = new MailController(_context);
+		_navigationController = new NavigationController(_context);
+		_sharedPrefController = new SharedPrefController(_context, SharedPrefConstants.SHARED_PREF_NAME);
 
 		_floatingService = FloatingService.class;
 
@@ -192,7 +194,7 @@ public class ActivityMain extends Activity {
 			public void onClick(View view) {
 				String times = _btnExport.getText().toString();
 				if (times != null) {
-					_mailService.SendMailWithContent("Times", times, false);
+					_mailController.SendMailWithContent("Times", times, false);
 				}
 			}
 		});
@@ -212,9 +214,9 @@ public class ActivityMain extends Activity {
 			@Override
 			public void onClick(View view) {
 				if (!_isRunning) {
-					_navigationService.NavigateTo(ActivityImpressum.class, false);
+					_navigationController.NavigateTo(ActivityImpressum.class, false);
 				} else {
-					Toast.makeText(_context, "Stopwatch is running!", Toast.LENGTH_SHORT).show();
+					Toasty.warning(_context, "Stopwatch is running!", Toast.LENGTH_SHORT).show();
 				}
 			}
 		});
@@ -226,7 +228,7 @@ public class ActivityMain extends Activity {
 				if (!_isRunning) {
 					finish();
 				} else {
-					Toast.makeText(_context, "Stopwatch is running!", Toast.LENGTH_SHORT).show();
+					Toasty.warning(_context, "Stopwatch is running!", Toast.LENGTH_SHORT).show();
 				}
 			}
 		});
@@ -236,9 +238,9 @@ public class ActivityMain extends Activity {
 			@Override
 			public void onClick(View view) {
 				if (!_isRunning) {
-					_navigationService.NavigateTo(ActivitySettings.class, false);
+					_navigationController.NavigateTo(ActivitySettings.class, false);
 				} else {
-					Toast.makeText(_context, "Stopwatch is running!", Toast.LENGTH_SHORT).show();
+					Toasty.warning(_context, "Stopwatch is running!", Toast.LENGTH_SHORT).show();
 				}
 			}
 		});
@@ -267,14 +269,14 @@ public class ActivityMain extends Activity {
 	}
 
 	private void tryToStartService() {
-		if (!_androidSystemService.IsServiceRunning(_floatingService)
-				&& _sharedPrefController.LoadBooleanValueFromSharedPreferences(Constants.BUBBLE_STATE)) {
+		if (!_androidSystemController.isServiceRunning(_floatingService)
+				&& _sharedPrefController.LoadBooleanValueFromSharedPreferences(SharedPrefConstants.BUBBLE_STATE)) {
 			startService(new Intent(_context, _floatingService));
 		}
 	}
 
 	private void tryToStopService() {
-		if (_androidSystemService.IsServiceRunning(_floatingService)) {
+		if (_androidSystemController.isServiceRunning(_floatingService)) {
 			stopService(new Intent(_context, _floatingService));
 		}
 	}

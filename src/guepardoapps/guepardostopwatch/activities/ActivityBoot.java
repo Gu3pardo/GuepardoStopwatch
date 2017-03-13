@@ -9,9 +9,9 @@ import guepardoapps.guepardostopwatch.R;
 import guepardoapps.guepardostopwatch.common.*;
 
 import guepardoapps.toolset.common.Logger;
+import guepardoapps.toolset.controller.AndroidSystemController;
+import guepardoapps.toolset.controller.NavigationController;
 import guepardoapps.toolset.controller.SharedPrefController;
-import guepardoapps.toolset.services.AndroidSystemService;
-import guepardoapps.toolset.services.NavigationService;
 
 public class ActivityBoot extends Activity {
 
@@ -20,40 +20,41 @@ public class ActivityBoot extends Activity {
 
 	private Context _context;
 
-	private AndroidSystemService _androidSystemService;
-	private NavigationService _navigationService;
+	private AndroidSystemController _androidSystemController;
+	private NavigationController _navigationController;
 	private SharedPrefController _sharedPrefController;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.side_boot);
-		getActionBar().setBackgroundDrawable(new ColorDrawable(Constants.ACTION_BAR_COLOR));
+		getActionBar().setBackgroundDrawable(new ColorDrawable(Colors.ACTION_BAR_COLOR));
 
-		_logger = new Logger(TAG, Constants.DEBUGGING_ENABLED);
+		_logger = new Logger(TAG, Enables.DEBUGGING);
 
 		_context = this;
 
-		_androidSystemService = new AndroidSystemService(_context);
-		_navigationService = new NavigationService(_context);
-		_sharedPrefController = new SharedPrefController(_context, Constants.SHARED_PREF_NAME);
+		_androidSystemController = new AndroidSystemController(_context);
+		_navigationController = new NavigationController(_context);
+		_sharedPrefController = new SharedPrefController(_context, SharedPrefConstants.SHARED_PREF_NAME);
 
-		if (!_sharedPrefController.LoadBooleanValueFromSharedPreferences(Constants.SHARED_PREF_NAME)) {
-			_sharedPrefController.SaveBooleanValue(Constants.BUBBLE_STATE, true);
-			_sharedPrefController.SaveIntegerValue(Constants.BUBBLE_POS_Y, Constants.BUBBLE_DEFAULT_POS_Y);
-			_sharedPrefController.SaveBooleanValue(Constants.SHARED_PREF_NAME, true);
+		if (!_sharedPrefController.LoadBooleanValueFromSharedPreferences(SharedPrefConstants.SHARED_PREF_NAME)) {
+			_sharedPrefController.SaveBooleanValue(SharedPrefConstants.BUBBLE_STATE, true);
+			_sharedPrefController.SaveIntegerValue(SharedPrefConstants.BUBBLE_POS_Y,
+					SharedPrefConstants.BUBBLE_DEFAULT_POS_Y);
+			_sharedPrefController.SaveBooleanValue(SharedPrefConstants.SHARED_PREF_NAME, true);
 		}
 	}
 
 	protected void onResume() {
 		super.onResume();
-		if (_androidSystemService.CurrentAndroidApi() >= android.os.Build.VERSION_CODES.M) {
+		if (_androidSystemController.CurrentAndroidApi() >= android.os.Build.VERSION_CODES.M) {
 			_logger.Debug("asking for permission");
-			if (_androidSystemService.CheckAPI23SystemPermission(Constants.PERMISSION_REQUEST_CODE)) {
-				_navigationService.NavigateTo(ActivityMain.class, true);
+			if (_androidSystemController.CheckAPI23SystemPermission(PermissionCodes.SYSTEM_PERMISSION)) {
+				_navigationController.NavigateTo(ActivityMain.class, true);
 			}
 		} else {
-			_navigationService.NavigateTo(ActivityMain.class, true);
+			_navigationController.NavigateTo(ActivityMain.class, true);
 		}
 	}
 
