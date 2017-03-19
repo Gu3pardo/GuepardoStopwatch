@@ -107,6 +107,7 @@ public final class R {
         public static final int floating_message_background=0x7f090006;
         public static final int floating_message_text=0x7f090008;
         public static final int floating_message_title=0x7f090007;
+        public static final int icon=0x7f090021;
         public static final int impressumAuthor=0x7f09000b;
         public static final int impressumEmail=0x7f09000c;
         public static final int impressumGithub=0x7f09000d;
@@ -114,15 +115,14 @@ public final class R {
         public static final int split1=0x7f09001a;
         public static final int split2=0x7f090018;
         public static final int switch_bubble_state=0x7f09001f;
+        public static final int text=0x7f090022;
         public static final int textTimerMin=0x7f09001b;
         public static final int textTimerMsec=0x7f090019;
         public static final int textTimerSec=0x7f090017;
         public static final int timeTextView=0x7f09000e;
         public static final int timeValue=0x7f090012;
         public static final int title_impressum=0x7f090009;
-        public static final int toast_icon=0x7f090021;
         public static final int toast_root=0x7f090020;
-        public static final int toast_text=0x7f090022;
     }
     public static final class layout {
         public static final int custom_dialog_1=0x7f030000;
@@ -133,14 +133,14 @@ public final class R {
         public static final int side_impressum=0x7f030005;
         public static final int side_main=0x7f030006;
         public static final int side_settings=0x7f030007;
-        public static final int toast_layout=0x7f030008;
+        public static final int toast=0x7f030008;
     }
     public static final class string {
-        public static final int about=0x7f050007;
-        public static final int advanced_settings=0x7f050033;
-        public static final int app_intro=0x7f05002f;
+        public static final int about=0x7f050008;
+        public static final int advanced_settings=0x7f050034;
+        public static final int app_intro=0x7f050030;
         public static final int app_name=0x7f050000;
-        public static final int author=0x7f050044;
+        public static final int author=0x7f050045;
         /** Detail page strings
 Detail page strings
 Detail page strings
@@ -167,9 +167,9 @@ Detail page strings
 Detail page strings
 Detail page strings
          */
-        public static final int beacon_detail=0x7f05000b;
-        public static final int beacon_detail_close_content_desc=0x7f050030;
-        public static final int beacon_detail_save_content_desc=0x7f050031;
+        public static final int beacon_detail=0x7f05000c;
+        public static final int beacon_detail_close_content_desc=0x7f050031;
+        public static final int beacon_detail_save_content_desc=0x7f050032;
         /**  Application strings 
  Application strings 
  Application strings 
@@ -196,8 +196,8 @@ Detail page strings
  Application strings 
  Application strings 
          */
-        public static final int beacon_scanner=0x7f050001;
-        public static final int beacon_transmitter=0x7f050002;
+        public static final int beacon_scanner=0x7f050002;
+        public static final int beacon_transmitter=0x7f050003;
         /**  Bluetooth 
  Bluetooth 
  Bluetooth 
@@ -224,7 +224,7 @@ Detail page strings
  Bluetooth 
  Bluetooth 
          */
-        public static final int bluetooth_not_enabled=0x7f050009;
+        public static final int bluetooth_not_enabled=0x7f05000a;
         /**  Content descriptions 
  Content descriptions 
  Content descriptions 
@@ -251,25 +251,25 @@ Detail page strings
  Content descriptions 
  Content descriptions 
          */
-        public static final int circle_button_content_desc=0x7f050016;
-        public static final int clear=0x7f05003b;
-        public static final int close=0x7f050041;
-        public static final int contentDescription=0x7f050047;
-        public static final int detail_bluetooth_address=0x7f050010;
-        public static final int detail_distance=0x7f05000f;
-        public static final int detail_major=0x7f05000e;
-        public static final int detail_manufacturer=0x7f050011;
-        public static final int detail_minor=0x7f05000d;
-        public static final int detail_rssi=0x7f050012;
-        public static final int detail_service_uuid=0x7f050013;
-        public static final int detail_tx_power=0x7f050014;
-        public static final int detail_uuid=0x7f05000c;
-        public static final int dismiss_overlay_button_label=0x7f050038;
-        public static final int distance=0x7f050015;
-        public static final int dummyTime=0x7f05003f;
-        public static final int email=0x7f050045;
-        public static final int githubLink=0x7f050046;
-        public static final int impressum=0x7f050043;
+        public static final int circle_button_content_desc=0x7f050017;
+        public static final int clear=0x7f05003c;
+        public static final int close=0x7f050042;
+        public static final int contentDescription=0x7f050001;
+        public static final int detail_bluetooth_address=0x7f050011;
+        public static final int detail_distance=0x7f050010;
+        public static final int detail_major=0x7f05000f;
+        public static final int detail_manufacturer=0x7f050012;
+        public static final int detail_minor=0x7f05000e;
+        public static final int detail_rssi=0x7f050013;
+        public static final int detail_service_uuid=0x7f050014;
+        public static final int detail_tx_power=0x7f050015;
+        public static final int detail_uuid=0x7f05000d;
+        public static final int dismiss_overlay_button_label=0x7f050039;
+        public static final int distance=0x7f050016;
+        public static final int dummyTime=0x7f050040;
+        public static final int email=0x7f050046;
+        public static final int githubLink=0x7f050047;
+        public static final int impressum=0x7f050044;
         /**  List item strings 
  List item strings 
  List item strings 
@@ -296,14 +296,14 @@ Detail page strings
  List item strings 
  List item strings 
          */
-        public static final int list_item_distance=0x7f050004;
-        public static final int list_item_major_minor=0x7f050005;
-        public static final int logo=0x7f050003;
-        public static final int please_enable_bluetooth=0x7f05000a;
-        public static final int pref_beacon_format=0x7f050037;
-        public static final int pref_beacon_format_summary=0x7f050036;
-        public static final int pref_between_scan_period_summary=0x7f050021;
-        public static final int pref_between_scan_period_title=0x7f050022;
+        public static final int list_item_distance=0x7f050005;
+        public static final int list_item_major_minor=0x7f050006;
+        public static final int logo=0x7f050004;
+        public static final int please_enable_bluetooth=0x7f05000b;
+        public static final int pref_beacon_format=0x7f050038;
+        public static final int pref_beacon_format_summary=0x7f050037;
+        public static final int pref_between_scan_period_summary=0x7f050022;
+        public static final int pref_between_scan_period_title=0x7f050023;
         /**  Strings related to Settings 
  Settings Header Strings 
  Strings related to Settings 
@@ -355,11 +355,11 @@ Detail page strings
  Strings related to Settings 
  Settings Header Strings 
          */
-        public static final int pref_header_scanning=0x7f05001c;
-        public static final int pref_header_transmit=0x7f050023;
-        public static final int pref_log_summary=0x7f050032;
-        public static final int pref_scan_period_summary=0x7f05001f;
-        public static final int pref_scan_period_title=0x7f050020;
+        public static final int pref_header_scanning=0x7f05001d;
+        public static final int pref_header_transmit=0x7f050024;
+        public static final int pref_log_summary=0x7f050033;
+        public static final int pref_scan_period_summary=0x7f050020;
+        public static final int pref_scan_period_title=0x7f050021;
         /**  Scanning settings 
  Scanning settings 
  Scanning settings 
@@ -386,29 +386,29 @@ Detail page strings
  Scanning settings 
  Scanning settings 
          */
-        public static final int pref_scan_tracking_age_summary=0x7f05001d;
-        public static final int pref_scan_tracking_age_title=0x7f05001e;
-        public static final int pref_transmit_beacon_advertisement=0x7f05002e;
-        public static final int pref_transmit_beacon_advertisement_summary=0x7f05002d;
-        public static final int pref_transmit_beacon_name_summary=0x7f050029;
-        public static final int pref_transmit_beacon_uuid=0x7f050026;
-        public static final int pref_transmit_beacon_uuid_summary=0x7f05002b;
-        public static final int pref_transmit_major=0x7f050027;
-        public static final int pref_transmit_minor=0x7f050028;
-        public static final int pref_transmit_power=0x7f05002a;
-        public static final int pref_transmit_power_summary=0x7f05002c;
-        public static final int pref_use_beacon_formats=0x7f050034;
-        public static final int pref_use_format_summary=0x7f050035;
-        public static final int ring_pulse_desc=0x7f050017;
-        public static final int round=0x7f05003c;
-        public static final int scan_switch_label=0x7f050019;
-        public static final int separator=0x7f050040;
-        public static final int set_bubble_state=0x7f050042;
-        public static final int settings=0x7f050008;
-        public static final int start=0x7f05003e;
-        public static final int stop=0x7f05003d;
-        public static final int stop_button_content_desc=0x7f050018;
-        public static final int stop_circle_desc=0x7f05001b;
+        public static final int pref_scan_tracking_age_summary=0x7f05001e;
+        public static final int pref_scan_tracking_age_title=0x7f05001f;
+        public static final int pref_transmit_beacon_advertisement=0x7f05002f;
+        public static final int pref_transmit_beacon_advertisement_summary=0x7f05002e;
+        public static final int pref_transmit_beacon_name_summary=0x7f05002a;
+        public static final int pref_transmit_beacon_uuid=0x7f050027;
+        public static final int pref_transmit_beacon_uuid_summary=0x7f05002c;
+        public static final int pref_transmit_major=0x7f050028;
+        public static final int pref_transmit_minor=0x7f050029;
+        public static final int pref_transmit_power=0x7f05002b;
+        public static final int pref_transmit_power_summary=0x7f05002d;
+        public static final int pref_use_beacon_formats=0x7f050035;
+        public static final int pref_use_format_summary=0x7f050036;
+        public static final int ring_pulse_desc=0x7f050018;
+        public static final int round=0x7f05003d;
+        public static final int scan_switch_label=0x7f05001a;
+        public static final int separator=0x7f050041;
+        public static final int set_bubble_state=0x7f050043;
+        public static final int settings=0x7f050009;
+        public static final int start=0x7f05003f;
+        public static final int stop=0x7f05003e;
+        public static final int stop_button_content_desc=0x7f050019;
+        public static final int stop_circle_desc=0x7f05001c;
         /**  Menu item strings 
  Menu item strings 
  Menu item strings 
@@ -435,12 +435,12 @@ Detail page strings
  Menu item strings 
  Menu item strings 
          */
-        public static final int stop_scanning=0x7f050006;
-        public static final int time=0x7f050039;
-        public static final int timev=0x7f05003a;
-        public static final int transmit_switch_label=0x7f05001a;
-        public static final int transmitting_not_supported=0x7f050024;
-        public static final int transmitting_not_supported_message=0x7f050025;
+        public static final int stop_scanning=0x7f050007;
+        public static final int time=0x7f05003a;
+        public static final int timev=0x7f05003b;
+        public static final int transmit_switch_label=0x7f05001b;
+        public static final int transmitting_not_supported=0x7f050025;
+        public static final int transmitting_not_supported_message=0x7f050026;
     }
     public static final class style {
         /** 

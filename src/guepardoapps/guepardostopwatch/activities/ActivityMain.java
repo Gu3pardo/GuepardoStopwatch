@@ -15,11 +15,11 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import es.dmoral.toasty.Toasty;
-
 import guepardoapps.guepardostopwatch.R;
 import guepardoapps.guepardostopwatch.common.*;
 import guepardoapps.guepardostopwatch.service.FloatingService;
+
+import guepardoapps.library.toastview.ToastView;
 
 import guepardoapps.toolset.controller.AndroidSystemController;
 import guepardoapps.toolset.controller.MailController;
@@ -216,7 +216,7 @@ public class ActivityMain extends Activity {
 				if (!_isRunning) {
 					_navigationController.NavigateTo(ActivityImpressum.class, false);
 				} else {
-					Toasty.warning(_context, "Stopwatch is running!", Toast.LENGTH_SHORT).show();
+					ToastView.warning(_context, "Stopwatch is running!", Toast.LENGTH_SHORT).show();
 				}
 			}
 		});
@@ -228,7 +228,7 @@ public class ActivityMain extends Activity {
 				if (!_isRunning) {
 					finish();
 				} else {
-					Toasty.warning(_context, "Stopwatch is running!", Toast.LENGTH_SHORT).show();
+					ToastView.warning(_context, "Stopwatch is running!", Toast.LENGTH_SHORT).show();
 				}
 			}
 		});
@@ -240,7 +240,7 @@ public class ActivityMain extends Activity {
 				if (!_isRunning) {
 					_navigationController.NavigateTo(ActivitySettings.class, false);
 				} else {
-					Toasty.warning(_context, "Stopwatch is running!", Toast.LENGTH_SHORT).show();
+					ToastView.warning(_context, "Stopwatch is running!", Toast.LENGTH_SHORT).show();
 				}
 			}
 		});
