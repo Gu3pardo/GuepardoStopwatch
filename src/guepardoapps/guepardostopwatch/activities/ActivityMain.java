@@ -21,10 +21,10 @@ import guepardoapps.guepardostopwatch.service.FloatingService;
 
 import guepardoapps.library.toastview.ToastView;
 
-import guepardoapps.toolset.controller.AndroidSystemController;
-import guepardoapps.toolset.controller.MailController;
-import guepardoapps.toolset.controller.NavigationController;
-import guepardoapps.toolset.controller.SharedPrefController;
+import guepardoapps.library.toolset.controller.AndroidSystemController;
+import guepardoapps.library.toolset.controller.MailController;
+import guepardoapps.library.toolset.controller.NavigationController;
+import guepardoapps.library.toolset.controller.SharedPrefController;
 
 public class ActivityMain extends Activity {
 

@@ -4,7 +4,7 @@
  * aapt tool from the resource data it found.  It
  * should not be modified by hand.
  */
-package guepardoapps.toolset;
+package guepardoapps.library.toolset;
 
 public final class R {
 	public static final class anim {
@@ -60,34 +60,29 @@ public final class R {
 		public static final int ic_warning_outline_white = 0x7f020008;
 		public static final int ic_warning_white_48dp = 0x7f020009;
 		public static final int toast_frame = 0x7f02000a;
-		public static final int weather_clear = 0x7f02000b;
-		public static final int weather_cloud = 0x7f02000c;
-		public static final int weather_dummy = 0x7f02000d;
-		public static final int weather_fog = 0x7f02000e;
-		public static final int weather_haze = 0x7f02000f;
-		public static final int weather_rain = 0x7f020010;
-		public static final int weather_snow = 0x7f020011;
 	}
 	public static final class id {
 		public static final int custom_alert_dialog_background = 0x7f090000;
 		public static final int custom_alert_dialog_btn_cancel = 0x7f090004;
 		public static final int custom_alert_dialog_btn_neutral = 0x7f090005;
 		public static final int custom_alert_dialog_btn_ok = 0x7f090003;
+		public static final int custom_alert_dialog_edittext = 0x7f090006;
 		public static final int custom_alert_dialog_prompt = 0x7f090002;
 		public static final int custom_alert_dialog_title = 0x7f090001;
-		public static final int floating_message_background = 0x7f090006;
-		public static final int floating_message_text = 0x7f090008;
-		public static final int floating_message_title = 0x7f090007;
-		public static final int icon = 0x7f090021;
-		public static final int text = 0x7f090022;
-		public static final int toast_root = 0x7f090020;
+		public static final int floating_message_background = 0x7f090007;
+		public static final int floating_message_text = 0x7f090009;
+		public static final int floating_message_title = 0x7f090008;
+		public static final int icon = 0x7f090022;
+		public static final int text = 0x7f090023;
+		public static final int toast_root = 0x7f090021;
 	}
 	public static final class layout {
-		public static final int custom_dialog_1 = 0x7f030000;
-		public static final int custom_dialog_2 = 0x7f030001;
-		public static final int custom_dialog_3 = 0x7f030002;
-		public static final int floating_message = 0x7f030003;
-		public static final int toast = 0x7f030008;
+		public static final int custom_dialog_1button = 0x7f030000;
+		public static final int custom_dialog_2buttons = 0x7f030001;
+		public static final int custom_dialog_3buttons = 0x7f030002;
+		public static final int custom_dialog_edittext = 0x7f030003;
+		public static final int floating_message = 0x7f030004;
+		public static final int toast = 0x7f030009;
 	}
 	public static final class string {
 		public static final int about = 0x7f050008;

@@ -22,8 +22,8 @@ import android.widget.TextView;
 import guepardoapps.guepardostopwatch.R;
 import guepardoapps.guepardostopwatch.common.*;
 
-import guepardoapps.toolset.controller.MailController;
-import guepardoapps.toolset.controller.SharedPrefController;
+import guepardoapps.library.toolset.controller.MailController;
+import guepardoapps.library.toolset.controller.SharedPrefController;
 
 public class FloatingService extends Service {
 

@@ -17,12 +17,12 @@ public final class R {
 		public static final int toast_frame = 0x7f02000a;
 	}
 	public static final class id {
-		public static final int icon = 0x7f090021;
-		public static final int text = 0x7f090022;
-		public static final int toast_root = 0x7f090020;
+		public static final int icon = 0x7f090022;
+		public static final int text = 0x7f090023;
+		public static final int toast_root = 0x7f090021;
 	}
 	public static final class layout {
-		public static final int toast = 0x7f030008;
+		public static final int toast = 0x7f030009;
 	}
 	public static final class string {
 		public static final int app_name = 0x7f050000;

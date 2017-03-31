@@ -13,8 +13,8 @@ import guepardoapps.guepardostopwatch.R;
 import guepardoapps.guepardostopwatch.common.*;
 import guepardoapps.guepardostopwatch.service.FloatingService;
 
-import guepardoapps.toolset.controller.AndroidSystemController;
-import guepardoapps.toolset.controller.SharedPrefController;
+import guepardoapps.library.toolset.controller.AndroidSystemController;
+import guepardoapps.library.toolset.controller.SharedPrefController;
 
 public class ActivitySettings extends Activity {
 

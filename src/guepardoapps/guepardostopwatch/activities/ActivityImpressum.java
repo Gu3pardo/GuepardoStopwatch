@@ -11,8 +11,8 @@ import android.view.View;
 import guepardoapps.guepardostopwatch.R;
 import guepardoapps.guepardostopwatch.common.*;
 
-import guepardoapps.toolset.common.Logger;
-import guepardoapps.toolset.controller.MailController;
+import guepardoapps.library.toolset.common.Logger;
+import guepardoapps.library.toolset.controller.MailController;
 
 public class ActivityImpressum extends Activity {
 

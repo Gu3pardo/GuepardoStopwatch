@@ -8,14 +8,14 @@ import android.os.Bundle;
 import guepardoapps.guepardostopwatch.R;
 import guepardoapps.guepardostopwatch.common.*;
 
-import guepardoapps.toolset.common.Logger;
-import guepardoapps.toolset.controller.AndroidSystemController;
-import guepardoapps.toolset.controller.NavigationController;
-import guepardoapps.toolset.controller.SharedPrefController;
+import guepardoapps.library.toolset.common.Logger;
+import guepardoapps.library.toolset.controller.AndroidSystemController;
+import guepardoapps.library.toolset.controller.NavigationController;
+import guepardoapps.library.toolset.controller.SharedPrefController;
 
 public class ActivityBoot extends Activity {
 
-	private static final String TAG = ActivityBoot.class.getName();
+	private static final String TAG = ActivityBoot.class.getSimpleName();
 	private Logger _logger;
 
 	private Context _context;
