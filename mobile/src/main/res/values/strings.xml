@@ -1,0 +1,23 @@
+<resources>
+    <string name="app_name">Stop me</string>
+
+    <string name="time">Times:</string>
+    <string name="timeValues">values for time</string>
+    <string name="clear">Clear</string>
+    <string name="round">Round</string>
+    <string name="stop">Stop</string>
+    <string name="start">Start</string>
+    <string name="dummyTime">00</string>
+    <string name="separator">:</string>
+    <string name="close">X</string>
+    <string name="set_bubble_state">Activate floating stopwatch</string>
+
+    <string name="contentDescription">This is a image</string>
+
+    <string name="about">About</string>
+    <string name="author">Jonas Schubert\nGuepardoApps</string>
+    <string name="email">E-Mail: guepardoapps@gmail.com</string>
+    <string name="gitHubLink">https://github.com/Gu3pardo/StopMe/</string>
+    <string name="payPalLink">https://www.paypal.me/GuepardoApps/</string>
+
+</resources>
