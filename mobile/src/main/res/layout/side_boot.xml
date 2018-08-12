@@ -25,7 +25,7 @@
                 android:layout_marginBottom="15dp"
                 android:contentDescription="@string/contentDescription"
                 android:scaleType="centerInside"
-                android:src="@drawable/main_image_informations" />
+                android:src="@drawable/about" />
 
             <ProgressBar
                 android:id="@+id/progressBar"

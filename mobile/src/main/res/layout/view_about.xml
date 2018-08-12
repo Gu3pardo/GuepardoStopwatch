@@ -54,7 +54,7 @@
                     android:layout_height="100dp"
                     android:contentDescription="@string/contentDescription"
                     android:scaleType="centerInside"
-                    android:src="@drawable/main_image_informations" />
+                    android:src="@drawable/about" />
 
                 <TextView
                     android:id="@+id/imprintAuthor"

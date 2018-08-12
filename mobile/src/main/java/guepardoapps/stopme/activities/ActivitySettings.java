@@ -4,21 +4,19 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.CompoundButton;
 import android.widget.Switch;
-import android.widget.CompoundButton.OnCheckedChangeListener;
 
 import guepardoapps.stopme.R;
-import guepardoapps.stopme.common.*;
-import guepardoapps.stopme.controller.AndroidSystemController;
-import guepardoapps.stopme.controller.SharedPrefController;
+import guepardoapps.stopme.common.Constants;
+import guepardoapps.stopme.controller.SharedPreferenceController;
+import guepardoapps.stopme.controller.SystemInfoController;
 import guepardoapps.stopme.service.FloatingService;
 
 public class ActivitySettings extends Activity {
     private Context _context;
 
-    private AndroidSystemController _androidSystemController;
-    private SharedPrefController _sharedPrefController;
+    private SystemInfoController _androidSystemController;
+    private SharedPreferenceController _sharedPrefController;
 
     private Class<FloatingService> _floatingService = FloatingService.class;
 
@@ -28,26 +26,22 @@ public class ActivitySettings extends Activity {
         setContentView(R.layout.side_settings);
 
         _context = this;
-        _androidSystemController = new AndroidSystemController(_context);
-        _sharedPrefController = new SharedPrefController(_context, SharedPrefConstants.SHARED_PREF_NAME);
+        _androidSystemController = new SystemInfoController(_context);
+        _sharedPrefController = new SharedPreferenceController(_context);
 
         Switch bubbleStateSwitch = findViewById(R.id.switch_bubble_state);
-        bubbleStateSwitch.setChecked(
-                _sharedPrefController.LoadBooleanValueFromSharedPreferences(SharedPrefConstants.BUBBLE_STATE));
-        bubbleStateSwitch.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                _sharedPrefController.SaveBooleanValue(SharedPrefConstants.BUBBLE_STATE, isChecked);
-                if (isChecked) {
-                    if (_androidSystemController.CurrentAndroidApi() >= android.os.Build.VERSION_CODES.M) {
-                        _androidSystemController.CheckAPI23SystemPermission(PermissionCodes.SYSTEM_PERMISSION);
-                    } else {
-                        _context.startService(new Intent(_context, _floatingService));
-                    }
+        bubbleStateSwitch.setChecked((boolean) _sharedPrefController.load(Constants.bubbleState, false));
+        bubbleStateSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            _sharedPrefController.save(Constants.bubbleState, isChecked);
+            if (isChecked) {
+                if (_androidSystemController.currentAndroidApi() >= android.os.Build.VERSION_CODES.M) {
+                    _androidSystemController.checkAPI23SystemPermission(Constants.systemPermissionId);
                 } else {
-                    if (_androidSystemController.IsServiceRunning(_floatingService)) {
-                        _context.stopService(new Intent(_context, _floatingService));
-                    }
+                    _context.startService(new Intent(_context, _floatingService));
+                }
+            } else {
+                if (_androidSystemController.isServiceRunning(_floatingService)) {
+                    _context.stopService(new Intent(_context, _floatingService));
                 }
             }
         });

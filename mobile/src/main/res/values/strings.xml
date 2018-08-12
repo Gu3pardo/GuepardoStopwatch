@@ -12,12 +12,12 @@
     <string name="close">X</string>
     <string name="set_bubble_state">Activate floating stopwatch</string>
 
-    <string name="contentDescription">This is a image</string>
+    <string name="contentDescription">This is an image</string>
 
     <string name="about">About</string>
     <string name="author">Jonas Schubert\nGuepardoApps</string>
     <string name="email">E-Mail: guepardoapps@gmail.com</string>
-    <string name="gitHubLink">https://github.com/Gu3pardo/StopMe/</string>
+    <string name="gitHubLink">https://github.com/GuepardoApps/StopMe/</string>
     <string name="payPalLink">https://www.paypal.me/GuepardoApps/</string>
 
 </resources>

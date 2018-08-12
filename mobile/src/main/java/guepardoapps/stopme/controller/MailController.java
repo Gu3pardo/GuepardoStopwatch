@@ -4,17 +4,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 
-import guepardoapps.stopme.tools.Logger;
-
 public class MailController {
-    private static final String TAG = MailController.class.getSimpleName();
-    private Logger _logger;
-
     private Context _context;
 
     public MailController(@NonNull Context context) {
-        _logger = new Logger(TAG);
-        _logger.Debug("Created new " + TAG + "...");
         _context = context;
     }
 

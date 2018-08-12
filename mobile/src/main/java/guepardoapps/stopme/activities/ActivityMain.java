@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -19,20 +18,20 @@ import java.util.Locale;
 
 import es.dmoral.toasty.Toasty;
 import guepardoapps.stopme.R;
-import guepardoapps.stopme.common.*;
-import guepardoapps.stopme.controller.AndroidSystemController;
+import guepardoapps.stopme.common.Constants;
 import guepardoapps.stopme.controller.MailController;
 import guepardoapps.stopme.controller.NavigationController;
-import guepardoapps.stopme.controller.SharedPrefController;
+import guepardoapps.stopme.controller.SharedPreferenceController;
+import guepardoapps.stopme.controller.SystemInfoController;
 import guepardoapps.stopme.service.FloatingService;
 
 public class ActivityMain extends Activity {
     private Context _context;
 
-    private AndroidSystemController _androidSystemController;
+    private SystemInfoController _androidSystemController;
     private MailController _mailController;
     private NavigationController _navigationController;
-    private SharedPrefController _sharedPrefController;
+    private SharedPreferenceController _sharedPrefController;
 
     private Class<FloatingService> _floatingService;
 
@@ -87,10 +86,10 @@ public class ActivityMain extends Activity {
 
         _context = this;
 
-        _androidSystemController = new AndroidSystemController(_context);
+        _androidSystemController = new SystemInfoController(_context);
         _mailController = new MailController(_context);
         _navigationController = new NavigationController(_context);
-        _sharedPrefController = new SharedPrefController(_context, SharedPrefConstants.SHARED_PREF_NAME);
+        _sharedPrefController = new SharedPreferenceController(_context);
 
         _floatingService = FloatingService.class;
 
@@ -107,136 +106,111 @@ public class ActivityMain extends Activity {
         _scrollView = findViewById(R.id.scrollView);
 
         final Button btnExport = findViewById(R.id.timeValue);
-        btnExport.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String times = btnExport.getText().toString();
-                _mailController.SendMail("Times", times, false);
-            }
+        btnExport.setOnClickListener(view -> {
+            String times = btnExport.getText().toString();
+            _mailController.SendMail("Times", times, false);
         });
 
         Button btnClear = findViewById(R.id.clearButton);
-        btnClear.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (!_isRunning) {
-                    btnExport.setText("");
-                }
+        btnClear.setOnClickListener(view -> {
+            if (!_isRunning) {
+                btnExport.setText("");
             }
         });
 
         Button btnStart = findViewById(R.id.btnStart);
-        btnStart.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (!_isRunning) {
-                    _roundStartTime = SystemClock.uptimeMillis();
-                    _startTimeFinal = SystemClock.uptimeMillis();
+        btnStart.setOnClickListener(view -> {
+            if (!_isRunning) {
+                _roundStartTime = SystemClock.uptimeMillis();
+                _startTimeFinal = SystemClock.uptimeMillis();
 
-                    _stopwatchHandler.postDelayed(_updateTimerMethod, 0);
+                _stopwatchHandler.postDelayed(_updateTimerMethod, 0);
 
-                    _isRunning = true;
-                }
+                _isRunning = true;
             }
         });
 
         Button btnPause = findViewById(R.id.btnPause);
-        btnPause.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (_isRunning) {
-                    String buttonExportText = btnExport.getText().toString();
-                    buttonExportText = String.format(Locale.GERMAN, "%sRound %d = %d:%02d:%03d\n",
-                            buttonExportText, _round, _roundMinutes, _roundSeconds, _roundMilliSeconds);
+        btnPause.setOnClickListener(view -> {
+            if (_isRunning) {
+                String buttonExportText = btnExport.getText().toString();
+                buttonExportText = String.format(Locale.GERMAN, "%sRound %d = %d:%02d:%03d\n",
+                        buttonExportText, _round, _roundMinutes, _roundSeconds, _roundMilliSeconds);
 
-                    btnExport.setText(buttonExportText);
-                    _scrollView.fullScroll(View.FOCUS_DOWN);
+                btnExport.setText(buttonExportText);
+                _scrollView.fullScroll(View.FOCUS_DOWN);
 
-                    _round++;
-                    _roundStartTime = SystemClock.uptimeMillis();
-                }
+                _round++;
+                _roundStartTime = SystemClock.uptimeMillis();
             }
         });
 
         Button btnStop = findViewById(R.id.btnStop);
-        btnStop.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (_isRunning) {
-                    _roundStartTime = 0L;
-                    _startTimeFinal = 0L;
+        btnStop.setOnClickListener(view -> {
+            if (_isRunning) {
+                _roundStartTime = 0L;
+                _startTimeFinal = 0L;
 
-                    _stopwatchHandler.removeCallbacks(_updateTimerMethod);
+                _stopwatchHandler.removeCallbacks(_updateTimerMethod);
 
-                    String buttonExportText = btnExport.getText().toString();
-                    buttonExportText = String.format(Locale.GERMAN, "%sRound %d = %d:%02d:%03d\n",
-                            buttonExportText, _round, _roundMinutes, _roundSeconds, _roundMilliSeconds);
+                String buttonExportText = btnExport.getText().toString();
+                buttonExportText = String.format(Locale.GERMAN, "%sRound %d = %d:%02d:%03d\n",
+                        buttonExportText, _round, _roundMinutes, _roundSeconds, _roundMilliSeconds);
 
-                    btnExport.setText(buttonExportText);
+                btnExport.setText(buttonExportText);
 
-                    String minute = _minuteView.getText().toString();
-                    String second = _secondsView.getText().toString();
-                    String milli = _milliSecondsView.getText().toString();
+                String minute = _minuteView.getText().toString();
+                String second = _secondsView.getText().toString();
+                String milli = _milliSecondsView.getText().toString();
 
-                    btnExport.setText(btnExport.getText().toString() + "\n" + "Time = " + minute + ":" + second + ":"
-                            + milli + "\n ________________________ \n\n");
+                btnExport.setText(String.format("%s\nTime = %s:%s:%s\n ________________________ \n\n", btnExport.getText().toString(), minute, second, milli));
 
-                    _scrollView.fullScroll(View.FOCUS_DOWN);
+                _scrollView.fullScroll(View.FOCUS_DOWN);
 
-                    _roundStartTime = 0L;
-                    _startTimeFinal = 0L;
+                _roundStartTime = 0L;
+                _startTimeFinal = 0L;
 
-                    _minuteView.setText(R.string.dummyTime);
-                    _secondsView.setText(R.string.dummyTime);
-                    _milliSecondsView.setText(R.string.dummyTime);
+                _minuteView.setText(R.string.dummyTime);
+                _secondsView.setText(R.string.dummyTime);
+                _milliSecondsView.setText(R.string.dummyTime);
 
-                    _finalSeconds = 0;
-                    _finalMinutes = 0;
-                    _finalMilliSeconds = 0;
+                _finalSeconds = 0;
+                _finalMinutes = 0;
+                _finalMilliSeconds = 0;
 
-                    _roundSeconds = 0;
-                    _roundMinutes = 0;
-                    _roundMilliSeconds = 0;
+                _roundSeconds = 0;
+                _roundMinutes = 0;
+                _roundMilliSeconds = 0;
 
-                    _isRunning = false;
-                    _round = 1;
-                }
+                _isRunning = false;
+                _round = 1;
             }
         });
 
-        FloatingActionButton btnImpressum = findViewById(R.id.btnImpressum);
-        btnImpressum.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (!_isRunning) {
-                    _navigationController.NavigateTo(ActivityImpressum.class, false);
-                } else {
-                    Toasty.warning(_context, "Stopwatch is running!", Toast.LENGTH_SHORT).show();
-                }
+        FloatingActionButton btnAbout = findViewById(R.id.btnImpressum);
+        btnAbout.setOnClickListener(view -> {
+            if (!_isRunning) {
+                _navigationController.NavigateTo(ActivityAbout.class, false);
+            } else {
+                Toasty.warning(_context, "Stopwatch is running!", Toast.LENGTH_SHORT).show();
             }
         });
 
         FloatingActionButton btnSettings = findViewById(R.id.btnSettings);
-        btnSettings.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (!_isRunning) {
-                    _navigationController.NavigateTo(ActivitySettings.class, false);
-                } else {
-                    Toasty.warning(_context, "Stopwatch is running!", Toast.LENGTH_SHORT).show();
-                }
+        btnSettings.setOnClickListener(view -> {
+            if (!_isRunning) {
+                _navigationController.NavigateTo(ActivitySettings.class, false);
+            } else {
+                Toasty.warning(_context, "Stopwatch is running!", Toast.LENGTH_SHORT).show();
             }
         });
 
         FloatingActionButton btnClose = findViewById(R.id.btnClose);
-        btnClose.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (!_isRunning) {
-                    finish();
-                } else {
-                    Toasty.warning(_context, "Stopwatch is running!", Toast.LENGTH_SHORT).show();
-                }
+        btnClose.setOnClickListener(view -> {
+            if (!_isRunning) {
+                finish();
+            } else {
+                Toasty.warning(_context, "Stopwatch is running!", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -265,14 +239,14 @@ public class ActivityMain extends Activity {
     }
 
     private void tryToStartService() {
-        if (!_androidSystemController.IsServiceRunning(_floatingService)
-                && _sharedPrefController.LoadBooleanValueFromSharedPreferences(SharedPrefConstants.BUBBLE_STATE)) {
+        if (!_androidSystemController.isServiceRunning(_floatingService)
+                && (boolean) _sharedPrefController.load(Constants.bubbleState, false)) {
             startService(new Intent(_context, _floatingService));
         }
     }
 
     private void tryToStopService() {
-        if (_androidSystemController.IsServiceRunning(_floatingService)) {
+        if (_androidSystemController.isServiceRunning(_floatingService)) {
             stopService(new Intent(_context, _floatingService));
         }
     }

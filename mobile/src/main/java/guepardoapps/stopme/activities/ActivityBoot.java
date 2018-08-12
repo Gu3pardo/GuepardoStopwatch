@@ -5,17 +5,13 @@ import android.os.Bundle;
 import android.os.Handler;
 
 import guepardoapps.stopme.R;
-import guepardoapps.stopme.common.*;
-import guepardoapps.stopme.controller.AndroidSystemController;
+import guepardoapps.stopme.common.Constants;
 import guepardoapps.stopme.controller.NavigationController;
-import guepardoapps.stopme.controller.SharedPrefController;
-import guepardoapps.stopme.tools.Logger;
+import guepardoapps.stopme.controller.SharedPreferenceController;
+import guepardoapps.stopme.controller.SystemInfoController;
 
 public class ActivityBoot extends Activity {
-    private static final String TAG = ActivityBoot.class.getSimpleName();
-    private Logger _logger;
-
-    private AndroidSystemController _androidSystemController;
+    private SystemInfoController _androidSystemController;
     private NavigationController _navigationController;
 
     @Override
@@ -23,25 +19,21 @@ public class ActivityBoot extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.side_boot);
 
-        _logger = new Logger(TAG, Enables.LOGGING);
-
-        _androidSystemController = new AndroidSystemController(this);
+        _androidSystemController = new SystemInfoController(this);
         _navigationController = new NavigationController(this);
 
-        SharedPrefController sharedPrefController = new SharedPrefController(this, SharedPrefConstants.SHARED_PREF_NAME);
-        if (!sharedPrefController.LoadBooleanValueFromSharedPreferences(SharedPrefConstants.SHARED_PREF_NAME)) {
-            sharedPrefController.SaveBooleanValue(SharedPrefConstants.BUBBLE_STATE, true);
-            sharedPrefController.SaveIntegerValue(SharedPrefConstants.BUBBLE_POS_Y,
-                    SharedPrefConstants.BUBBLE_DEFAULT_POS_Y);
-            sharedPrefController.SaveBooleanValue(SharedPrefConstants.SHARED_PREF_NAME, true);
+        SharedPreferenceController sharedPrefController = new SharedPreferenceController(this);
+        if (!(boolean) sharedPrefController.load(Constants.sharedPrefName, false)) {
+            sharedPrefController.save(Constants.bubbleState, true);
+            sharedPrefController.save(Constants.bubblePosY, Constants.bubbleDefaultPosY);
+            sharedPrefController.save(Constants.sharedPrefName, true);
         }
     }
 
     protected void onResume() {
         super.onResume();
-        if (_androidSystemController.CurrentAndroidApi() >= android.os.Build.VERSION_CODES.M) {
-            _logger.Debug("asking for permission");
-            if (_androidSystemController.CheckAPI23SystemPermission(PermissionCodes.SYSTEM_PERMISSION)) {
+        if (_androidSystemController.currentAndroidApi() >= android.os.Build.VERSION_CODES.M) {
+            if (_androidSystemController.checkAPI23SystemPermission(Constants.systemPermissionId)) {
                 navigateToMain();
             }
         } else {
@@ -60,11 +52,6 @@ public class ActivityBoot extends Activity {
     }
 
     private void navigateToMain() {
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                _navigationController.NavigateTo(ActivityMain.class, true);
-            }
-        }, 1500);
+        new Handler().postDelayed(() -> _navigationController.NavigateTo(ActivityMain.class, true), 1500);
     }
 }

@@ -7,17 +7,10 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 
-import guepardoapps.stopme.tools.Logger;
-
 public class NavigationController {
-    private static final String TAG = NavigationController.class.getSimpleName();
-    protected Logger _logger;
-
-    protected Context _context;
+    private Context _context;
 
     public NavigationController(@NonNull Context context) {
-        _logger = new Logger(TAG);
-        _logger.Debug("Created new " + TAG + "...");
         _context = context;
     }
 
@@ -62,7 +55,6 @@ public class NavigationController {
 
             return true;
         } catch (Exception e) {
-            _logger.Error(e.toString());
             return false;
         }
     }
