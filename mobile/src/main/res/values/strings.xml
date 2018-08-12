@@ -18,6 +18,7 @@
     <string name="author">Jonas Schubert\nGuepardoApps</string>
     <string name="email">E-Mail: guepardoapps@gmail.com</string>
     <string name="gitHubLink">https://github.com/GuepardoApps/StopMe/</string>
+    <string name="homepageLink">https://guepardoapps.github.io/</string>
     <string name="payPalLink">https://www.paypal.me/GuepardoApps/</string>
 
 </resources>

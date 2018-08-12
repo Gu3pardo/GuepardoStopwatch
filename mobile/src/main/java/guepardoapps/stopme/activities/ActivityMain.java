@@ -19,8 +19,6 @@ import java.util.Locale;
 import es.dmoral.toasty.Toasty;
 import guepardoapps.stopme.R;
 import guepardoapps.stopme.common.Constants;
-import guepardoapps.stopme.controller.MailController;
-import guepardoapps.stopme.controller.NavigationController;
 import guepardoapps.stopme.controller.SharedPreferenceController;
 import guepardoapps.stopme.controller.SystemInfoController;
 import guepardoapps.stopme.service.FloatingService;

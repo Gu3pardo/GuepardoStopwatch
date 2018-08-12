@@ -29,5 +29,4 @@
             android:name=".service.FloatingService"
             android:enabled="true" />
     </application>
-
 </manifest>
