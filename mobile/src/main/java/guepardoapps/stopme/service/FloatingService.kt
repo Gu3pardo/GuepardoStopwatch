@@ -42,6 +42,14 @@ class FloatingService : Service() {
     private var milliSecondsView: TextView? = null
 
     private var scrollView: ScrollView? = null
+    private var btnAbout: Button? = null
+    private var btnSettings: Button? = null
+    private var btnClose: Button? = null
+    private var btnExport: Button? = null
+    private var btnClear: Button? = null
+    private var btnStart: Button? = null
+    private var btnPause: Button? = null
+    private var btnStop: Button? = null
 
     override fun onBind(intent: Intent?): IBinder? {
         return null
@@ -151,51 +159,18 @@ class FloatingService : Service() {
     }
 
     private fun showStopwatchView() {
-        stopwatchWindowManager = applicationContext.getSystemService(Context.WINDOW_SERVICE) as WindowManager
 
-        val layoutParams = WindowManager.LayoutParams()
-        layoutParams.gravity = Gravity.CENTER
-        layoutParams.type = WindowManager.LayoutParams.TYPE_SYSTEM_ALERT
-        layoutParams.width = WindowManager.LayoutParams.MATCH_PARENT
-        layoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT
-        layoutParams.alpha = 1.0f
-        layoutParams.packageName = packageName
-        layoutParams.buttonBrightness = 1f
-        layoutParams.windowAnimations = android.R.style.Animation_Dialog
+        setStopwatchViews()
 
-        stopwatchView = View.inflate(applicationContext, R.layout.side_main, null)
-
-        minuteView = stopwatchView?.findViewById(R.id.textTimerMin)
-        secondsView = stopwatchView?.findViewById(R.id.textTimerSec)
-        milliSecondsView = stopwatchView?.findViewById(R.id.textTimerMsec)
-
-        scrollView = stopwatchView?.findViewById(R.id.scrollView)
-
-        val btnAbout: Button? = stopwatchView?.findViewById(R.id.btnImpressum)
         btnAbout?.visibility = View.GONE
-
-        val btnSettings: Button? = stopwatchView?.findViewById(R.id.btnSettings)
         btnSettings?.visibility = View.GONE
-
-        val btnClose: Button? = stopwatchView?.findViewById(R.id.btnClose)
-        btnClose?.setOnClickListener { stopwatchWindowManager?.removeView(stopwatchView) }
-
-        val btnExport: Button? = stopwatchView?.findViewById(R.id.timeValue)
-        btnExport?.setOnClickListener { mailService.sendMail("Times", btnExport.text.toString(), arrayListOf(), true) }
-
-        val btnClear: Button? = stopwatchView?.findViewById(R.id.clearButton)
+        btnClose?.setOnClickListener { removeView() }
+        btnExport?.setOnClickListener { mailService.sendMail("Times", btnExport?.text.toString(), arrayListOf(), true) }
         btnClear?.setOnClickListener { btnExport?.text = "" }
-
-        val btnStart: Button? = stopwatchView?.findViewById(R.id.btnStart)
         btnStart?.setOnClickListener { ClockService.instance.start() }
-
-        val btnPause: Button? = stopwatchView?.findViewById(R.id.btnPause)
         btnPause?.setOnClickListener { ClockService.instance.pause() }
-
-        val btnStop: Button? = stopwatchView?.findViewById(R.id.btnStop)
         btnStop?.setOnClickListener { ClockService.instance.stop() }
 
-        val btnPause = _stopwatchView.findViewById(R.id.btnPause)
         btnPause.setOnClickListener({ view ->
             if (_isRunning) {
                 var buttonExportText = btnExport.getText().toString()
@@ -210,7 +185,6 @@ class FloatingService : Service() {
             }
         })
 
-        val btnStop = _stopwatchView.findViewById(R.id.btnStop)
         btnStop.setOnClickListener({ view ->
             if (_isRunning) {
                 _roundStartTime = 0L
@@ -252,6 +226,65 @@ class FloatingService : Service() {
             }
         })
 
+        attachView()
+    }
+
+    private fun setStopwatchViews() {
+        stopwatchWindowManager = applicationContext.getSystemService(Context.WINDOW_SERVICE) as WindowManager
+
+        stopwatchView = View.inflate(applicationContext, R.layout.side_main, null)
+
+        minuteView = stopwatchView?.findViewById(R.id.textTimerMin)
+        secondsView = stopwatchView?.findViewById(R.id.textTimerSec)
+        milliSecondsView = stopwatchView?.findViewById(R.id.textTimerMsec)
+
+        scrollView = stopwatchView?.findViewById(R.id.scrollView)
+
+        btnAbout = stopwatchView?.findViewById(R.id.btnImpressum)
+        btnSettings = stopwatchView?.findViewById(R.id.btnSettings)
+        btnClose = stopwatchView?.findViewById(R.id.btnClose)
+        btnExport = stopwatchView?.findViewById(R.id.timeValue)
+        btnClear = stopwatchView?.findViewById(R.id.clearButton)
+        btnStart = stopwatchView?.findViewById(R.id.btnStart)
+        btnPause = stopwatchView?.findViewById(R.id.btnPause)
+        btnStop = stopwatchView?.findViewById(R.id.btnStop)
+    }
+
+    @Suppress("DEPRECATION")
+    private fun attachView() {
+        val layoutParams = WindowManager.LayoutParams()
+        layoutParams.gravity = Gravity.CENTER
+        layoutParams.type = WindowManager.LayoutParams.TYPE_SYSTEM_ALERT
+        layoutParams.width = WindowManager.LayoutParams.MATCH_PARENT
+        layoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT
+        layoutParams.alpha = 1.0f
+        layoutParams.packageName = packageName
+        layoutParams.buttonBrightness = 1f
+        layoutParams.windowAnimations = android.R.style.Animation_Dialog
+
         stopwatchWindowManager?.addView(stopwatchView, layoutParams)
+    }
+
+    private fun removeView() {
+        stopwatchWindowManager?.removeView(stopwatchView)
+
+        stopwatchView = null
+
+        minuteView = null
+        secondsView = null
+        milliSecondsView = null
+
+        scrollView = null
+
+        btnAbout = null
+        btnSettings = null
+        btnClose = null
+        btnExport = null
+        btnClear = null
+        btnStart = null
+        btnPause = null
+        btnStop = null
+
+        stopwatchWindowManager = null
     }
 }
