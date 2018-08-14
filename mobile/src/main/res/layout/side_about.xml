@@ -20,7 +20,7 @@
             android:layout_margin="5dp">
 
             <TextView
-                android:id="@+id/title_imprint"
+                android:id="@+id/title_about"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
@@ -37,7 +37,7 @@
                 android:id="@+id/bar"
                 android:layout_width="fill_parent"
                 android:layout_height="2dp"
-                android:layout_below="@+id/title_imprint"
+                android:layout_below="@+id/title_about"
                 android:layout_margin="5dp"
                 android:background="@color/SecondaryText" />
 
@@ -59,7 +59,7 @@
                     android:src="@drawable/about" />
 
                 <TextView
-                    android:id="@+id/imprintAuthor"
+                    android:id="@+id/aboutAuthor"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp"
@@ -69,7 +69,7 @@
                     android:textColor="@color/PrimaryText" />
 
                 <com.rey.material.widget.TextView
-                    android:id="@+id/imprintEmail"
+                    android:id="@+id/aboutEmail"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp"
@@ -87,7 +87,7 @@
                     app:rd_rippleType="touch" />
 
                 <com.rey.material.widget.TextView
-                    android:id="@+id/imprintHomepage"
+                    android:id="@+id/aboutHomepage"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp"
@@ -105,7 +105,7 @@
                     app:rd_rippleType="touch" />
 
                 <com.rey.material.widget.TextView
-                    android:id="@+id/imprintGitHub"
+                    android:id="@+id/aboutGitHub"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp"

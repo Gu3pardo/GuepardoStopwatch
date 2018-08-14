@@ -1,3 +1,3 @@
 package guepardoapps.stopme.models
 
-data class RxTime(val isRunning: Boolean, val timeInMillisFinal: Long, val rounds: ArrayList<Long>)
+data class RxTime(val running: Boolean, val timeInMillisFinal: Long, val rounds: ArrayList<Long>)

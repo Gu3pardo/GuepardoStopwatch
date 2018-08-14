@@ -6,7 +6,6 @@ import android.content.Intent
 import android.os.Bundle
 
 class NavigationService(val context: Context) : INavigationService {
-
     override fun navigate(activity: Class<*>, finish: Boolean) {
         context.startActivity(Intent(context, activity))
         if (finish) {

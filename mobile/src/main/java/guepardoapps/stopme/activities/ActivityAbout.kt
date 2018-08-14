@@ -8,8 +8,8 @@ import android.view.View
 import guepardoapps.stopme.R
 import guepardoapps.stopme.service.MailService
 
+@Suppress("UNUSED_PARAMETER")
 class ActivityAbout : Activity() {
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.side_about)

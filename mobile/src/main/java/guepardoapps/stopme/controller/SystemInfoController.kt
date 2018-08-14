@@ -26,8 +26,8 @@ class SystemInfoController(@NonNull private val context: Context) : ISystemInfoC
     private val minBrightnessLevel = 0.1
     private val maxBrightnessLevel = 1.0
 
-    private val accessibilityManager: AccessibilityManager? = context.getSystemService(Context.ACCESSIBILITY_SERVICE) as AccessibilityManager
-    private val activityManager: ActivityManager? = context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+    private val accessibilityManager: AccessibilityManager = context.getSystemService(Context.ACCESSIBILITY_SERVICE) as AccessibilityManager
+    private val activityManager: ActivityManager = context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
     private val packageManager: PackageManager = context.packageManager
 
     override fun getApkList(): List<ApplicationInfo> {
@@ -44,7 +44,7 @@ class SystemInfoController(@NonNull private val context: Context) : ISystemInfoC
 
     @Suppress("DEPRECATION")
     override fun isServiceRunning(serviceClassName: String): Boolean {
-        return activityManager?.getRunningServices(Integer.MAX_VALUE)!!
+        return activityManager.getRunningServices(Integer.MAX_VALUE)!!
                 .any { serviceInfo -> serviceClassName == serviceInfo.service.className }
     }
 
@@ -53,13 +53,13 @@ class SystemInfoController(@NonNull private val context: Context) : ISystemInfoC
     }
 
     override fun isAccessibilityServiceEnabled(serviceId: String): Boolean {
-        return accessibilityManager?.getEnabledAccessibilityServiceList(AccessibilityEvent.TYPES_ALL_MASK)!!
+        return accessibilityManager.getEnabledAccessibilityServiceList(AccessibilityEvent.TYPES_ALL_MASK)!!
                 .any { serviceInfo -> serviceInfo.id == serviceId }
     }
 
     @TargetApi(Build.VERSION_CODES.M)
     override fun isBaseActivityRunning(): Boolean {
-        return activityManager?.appTasks!!
+        return activityManager.appTasks!!
                 .any { task -> task.taskInfo.baseActivity.packageName == context.packageName }
     }
 

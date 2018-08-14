@@ -10,11 +10,10 @@ import io.reactivex.disposables.Disposable
 import io.reactivex.subjects.PublishSubject
 
 class ClockService private constructor() : IClockService, Disposable {
-
     private var context: Context? = null
 
-    private var stopwatchHandler: Handler? = null
-    private var isRunning: Boolean = false
+    private var stopwatchHandler: Handler = Handler()
+    private var running: Boolean = false
     private var startTimeFinal = 0L
     private var roundStartTime = 0L
     private var roundList: ArrayList<Long> = arrayListOf()
@@ -25,9 +24,9 @@ class ClockService private constructor() : IClockService, Disposable {
             val roundTimeInMillis = SystemClock.uptimeMillis() - roundStartTime
             roundList.replaceLast(roundTimeInMillis)
 
-            timePublishSubject.onNext(RxTime(isRunning, timeInMillisFinal, roundList))
+            timePublishSubject.onNext(RxTime(running, timeInMillisFinal, roundList))
 
-            stopwatchHandler?.postDelayed(this, 1)
+            stopwatchHandler.postDelayed(this, 1)
         }
     }
 
@@ -45,25 +44,24 @@ class ClockService private constructor() : IClockService, Disposable {
     override fun initialize(context: Context) {
         if (this.context === null) {
             this.context = context
-            this.stopwatchHandler = Handler()
         }
     }
 
     override fun start() {
-        if (!isRunning) {
+        if (!running) {
             startTimeFinal = SystemClock.uptimeMillis()
             roundStartTime = SystemClock.uptimeMillis()
             roundList = arrayListOf(0)
 
-            stopwatchHandler?.postDelayed(updateTimerMethod, 1)
-            isRunning = true
+            stopwatchHandler.postDelayed(updateTimerMethod, 1)
+            running = true
 
-            timePublishSubject.onNext(RxTime(isRunning, 0, roundList))
+            timePublishSubject.onNext(RxTime(running, 0, roundList))
         }
     }
 
     override fun pause() {
-        if (isRunning) {
+        if (running) {
             val roundTimeInMillis = SystemClock.uptimeMillis() - roundStartTime
             roundList.add(roundTimeInMillis)
             roundStartTime = SystemClock.uptimeMillis()
@@ -71,7 +69,7 @@ class ClockService private constructor() : IClockService, Disposable {
     }
 
     override fun stop() {
-        if (isRunning) {
+        if (running) {
             val timeInMillisFinal = SystemClock.uptimeMillis() - startTimeFinal
             val roundTimeInMillis = SystemClock.uptimeMillis() - roundStartTime
             roundList.replaceLast(roundTimeInMillis)
@@ -79,20 +77,19 @@ class ClockService private constructor() : IClockService, Disposable {
             startTimeFinal = 0L
             roundStartTime = 0L
 
-            stopwatchHandler?.removeCallbacks(updateTimerMethod)
-            isRunning = false
+            stopwatchHandler.removeCallbacks(updateTimerMethod)
+            running = false
 
-            timePublishSubject.onNext(RxTime(isRunning, timeInMillisFinal, roundList))
+            timePublishSubject.onNext(RxTime(running, timeInMillisFinal, roundList))
         }
     }
 
     override fun isDisposed(): Boolean {
-        return this.context === null || this.stopwatchHandler === null
+        return this.context === null
     }
 
     override fun dispose() {
-        this.stopwatchHandler?.removeCallbacks(updateTimerMethod)
-        this.stopwatchHandler = null
+        this.stopwatchHandler.removeCallbacks(updateTimerMethod)
         this.context = null
     }
 }
