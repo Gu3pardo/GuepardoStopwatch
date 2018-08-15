@@ -86,6 +86,11 @@ class SystemInfoController(@NonNull private val context: Context) : ISystemInfoC
         }
     }
 
+    @TargetApi(Build.VERSION_CODES.M)
+    override fun canDrawOverlay(): Boolean {
+        return Settings.canDrawOverlays(context)
+    }
+
     override fun displayDimension(): Display {
         val windowManager: WindowManager = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
         return windowManager.defaultDisplay

@@ -18,6 +18,7 @@ class ActivityBoot : Activity() {
 
         if (!(sharedPreferenceController.load(Constants.sharedPrefName, false) as Boolean)) {
             sharedPreferenceController.save(Constants.bubbleState, true)
+            sharedPreferenceController.save(Constants.bubblePosX, Constants.bubbleDefaultPosX)
             sharedPreferenceController.save(Constants.bubblePosY, Constants.bubbleDefaultPosY)
             sharedPreferenceController.save(Constants.sharedPrefName, true)
         }

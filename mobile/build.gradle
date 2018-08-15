@@ -10,10 +10,10 @@ android {
     buildToolsVersion "28.0.2"
     defaultConfig {
         applicationId "guepardoapps.stopme"
-        minSdkVersion 21
+        minSdkVersion 23
         targetSdkVersion 28
         versionCode 10200
-        versionName "1.2.0.180814"
+        versionName "1.2.0.180815"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
         testOptions {

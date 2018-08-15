@@ -8,6 +8,8 @@
     android:padding="10dp"
     tools:context="guepardoapps.stopme.activities.ActivityMain">
 
+    <!-- TODO new icons: https://icons8.de/icon/set/clear/material -->
+
     <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -18,30 +20,6 @@
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:layout_margin="5dp">
-
-            <TextView
-                android:id="@+id/timeTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentTop="true"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="10dp"
-                android:layout_toStartOf="@+id/btnAbout"
-                android:text="@string/time"
-                android:textAppearance="?android:attr/textAppearanceLarge"
-                android:textColor="@color/PrimaryText" />
-
-            <TextView
-                android:id="@+id/border"
-                android:layout_width="wrap_content"
-                android:layout_height="2dp"
-                android:layout_alignEnd="@+id/timeTextView"
-                android:layout_alignStart="@+id/timeTextView"
-                android:layout_below="@+id/timeTextView"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="2dp"
-                android:background="@color/SecondaryText" />
 
             <com.rey.material.widget.FloatingActionButton
                 android:id="@+id/btnAbout"
@@ -90,12 +68,74 @@
                 app:rd_rippleColor="@color/colorPrimary"
                 app:rd_rippleType="touch" />
 
+            <TextView
+                android:id="@+id/textTimerMin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/btnClose"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_toStartOf="@+id/split1"
+                android:text="@string/dummyTime"
+                android:textColor="@color/PrimaryText"
+                android:textSize="40sp" />
+
+            <TextView
+                android:id="@+id/split1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/textTimerSec"
+                android:layout_alignBottom="@+id/textTimerSec"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_toStartOf="@+id/textTimerSec"
+                android:text="@string/separator"
+                android:textColor="@color/PrimaryText"
+                android:textSize="40sp" />
+
+            <TextView
+                android:id="@+id/textTimerSec"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/btnClose"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp"
+                android:text="@string/dummyTime"
+                android:textColor="@color/PrimaryText"
+                android:textSize="40sp" />
+
+            <TextView
+                android:id="@+id/split2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/textTimerSec"
+                android:layout_alignBottom="@+id/textTimerSec"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_toEndOf="@+id/textTimerSec"
+                android:text="@string/separator"
+                android:textColor="@color/PrimaryText"
+                android:textSize="40sp" />
+
+            <TextView
+                android:id="@+id/textTimerMsec"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/btnClose"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_toEndOf="@+id/split2"
+                android:text="@string/dummyTime"
+                android:textColor="@color/PrimaryText"
+                android:textSize="40sp" />
+
             <ScrollView
                 android:id="@+id/scrollView"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:layout_above="@+id/clearButton"
-                android:layout_below="@+id/border"
+                android:layout_below="@+id/textTimerMin"
                 android:layout_margin="5dp">
 
                 <com.rey.material.widget.Button
@@ -160,66 +200,11 @@
                 app:rd_rippleColor="@color/colorPrimary"
                 app:rd_rippleType="touch" />
 
-            <TextView
-                android:id="@+id/textTimerSec"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_above="@+id/btnPause"
-                android:layout_centerHorizontal="true"
-                android:layout_marginBottom="10dp"
-                android:text="@string/dummyTime"
-                android:textColor="@color/PrimaryText"
-                android:textSize="40sp" />
-
-            <TextView
-                android:id="@+id/split2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_above="@+id/btnPause"
-                android:layout_marginBottom="10dp"
-                android:layout_toEndOf="@+id/textTimerSec"
-                android:text="@string/separator"
-                android:textColor="@color/PrimaryText"
-                android:textSize="40sp" />
-
-            <TextView
-                android:id="@+id/textTimerMsec"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_above="@+id/btnPause"
-                android:layout_marginBottom="10dp"
-                android:layout_toEndOf="@+id/split2"
-                android:text="@string/dummyTime"
-                android:textColor="@color/PrimaryText"
-                android:textSize="40sp" />
-
-            <TextView
-                android:id="@+id/split1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignBaseline="@+id/textTimerSec"
-                android:layout_alignBottom="@+id/textTimerSec"
-                android:layout_toStartOf="@+id/textTimerSec"
-                android:text="@string/separator"
-                android:textColor="@color/PrimaryText"
-                android:textSize="40sp" />
-
-            <TextView
-                android:id="@+id/textTimerMin"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_above="@+id/btnPause"
-                android:layout_marginBottom="10dp"
-                android:layout_toStartOf="@+id/split1"
-                android:text="@string/dummyTime"
-                android:textColor="@color/PrimaryText"
-                android:textSize="40sp" />
-
             <com.rey.material.widget.Button
                 android:id="@+id/clearButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_above="@+id/textTimerSec"
+                android:layout_above="@+id/btnPause"
                 android:layout_centerHorizontal="true"
                 android:layout_margin="5dp"
                 android:text="@string/clear"

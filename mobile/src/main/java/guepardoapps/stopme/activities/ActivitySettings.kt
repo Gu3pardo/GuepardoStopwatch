@@ -15,21 +15,21 @@ class ActivitySettings : Activity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.side_settings)
 
-        val systemController = SystemInfoController(this)
+        val systemInfoController = SystemInfoController(this)
         val sharedPreferenceController = SharedPreferenceController(this)
 
-        val bubbleStateSwitch = findViewById<Switch>(R.id.switch_bubble_state)
+        val bubbleStateSwitch: Switch = findViewById(R.id.switch_bubble_state)
         bubbleStateSwitch.isChecked = sharedPreferenceController.load(Constants.bubbleState, false) as Boolean
         bubbleStateSwitch.setOnCheckedChangeListener { _, isChecked ->
             sharedPreferenceController.save(Constants.bubbleState, isChecked)
             if (isChecked) {
-                if (systemController.currentAndroidApi() >= android.os.Build.VERSION_CODES.M) {
-                    systemController.checkAPI23SystemPermission(Constants.systemPermissionId)
+                if (systemInfoController.canDrawOverlay()) {
+                    systemInfoController.checkAPI23SystemPermission(Constants.systemPermissionId)
                 } else {
                     startService(Intent(this, FloatingService::class.java))
                 }
             } else {
-                if (systemController.isServiceRunning(FloatingService::class.java)) {
+                if (systemInfoController.isServiceRunning(FloatingService::class.java)) {
                     stopService(Intent(this, FloatingService::class.java))
                 }
             }

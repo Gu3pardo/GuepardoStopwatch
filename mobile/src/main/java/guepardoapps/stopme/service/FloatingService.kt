@@ -5,7 +5,10 @@ import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.graphics.PixelFormat
+import android.graphics.drawable.GradientDrawable
+import android.os.Build
 import android.os.IBinder
+import android.support.annotation.RequiresApi
 import android.view.Gravity
 import android.view.MotionEvent
 import android.view.View
@@ -18,21 +21,23 @@ import com.rey.material.widget.FloatingActionButton
 import guepardoapps.stopme.R
 import guepardoapps.stopme.common.Constants
 import guepardoapps.stopme.controller.SharedPreferenceController
+import guepardoapps.stopme.controller.SystemInfoController
 import guepardoapps.stopme.extensions.integerFormat
 import guepardoapps.stopme.models.RxTime
 import guepardoapps.stopme.utils.Logger
 import io.reactivex.schedulers.Schedulers
 
-// TODO check overlay draw permission
 // https://stackoverflow.com/questions/7569937/unable-to-add-window-android-view-viewrootw44da9bc0-permission-denied-for-t#answer-34061521
 
 class FloatingService : Service() {
     private val tag: String = FloatingService::class.java.simpleName
 
+    private lateinit var systemInfoController: SystemInfoController
     private lateinit var windowManager: WindowManager
 
     private var bubbleParamsStore: WindowManager.LayoutParams? = null
     private lateinit var bubbleView: ImageView
+    private var bubblePosX: Int = 0
     private var bubblePosY: Int = 100
     private var bubbleMoved: Boolean = false
 
@@ -57,6 +62,7 @@ class FloatingService : Service() {
     override fun onCreate() {
         super.onCreate()
 
+        systemInfoController = SystemInfoController(this)
         windowManager = getSystemService(Context.WINDOW_SERVICE) as WindowManager
         bubbleView = ImageView(this)
 
@@ -84,6 +90,7 @@ class FloatingService : Service() {
     private fun initBubbleView() {
         val sharedPreferenceController = SharedPreferenceController(this)
 
+        bubblePosX = sharedPreferenceController.load(Constants.bubblePosX, Constants.bubbleDefaultPosX) as Int
         bubblePosY = sharedPreferenceController.load(Constants.bubblePosY, Constants.bubbleDefaultPosY) as Int
 
         val params = WindowManager.LayoutParams(
@@ -93,10 +100,22 @@ class FloatingService : Service() {
                 WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
                 PixelFormat.TRANSLUCENT)
         params.gravity = Gravity.TOP or Gravity.START
-        params.x = 0
+        params.x = bubblePosX
         params.y = bubblePosY
+        if (systemInfoController.currentAndroidApi() >= Build.VERSION_CODES.O) {
+            @RequiresApi(Build.VERSION_CODES.O)
+            params.type = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
+        } else {
+            params.type = WindowManager.LayoutParams.TYPE_SYSTEM_ALERT
+        }
+
         bubbleParamsStore = params
 
+        val backgroundShape = GradientDrawable()
+        backgroundShape.setColor(resources.getColor(R.color.colorPrimaryDark))
+        backgroundShape.cornerRadius = 100.0f
+
+        bubbleView.background = backgroundShape
         bubbleView.setImageResource(R.mipmap.ic_launcher)
         bubbleView.setOnTouchListener(object : View.OnTouchListener {
             private var initialX: Int = 0
@@ -150,9 +169,16 @@ class FloatingService : Service() {
         bubbleView.setOnClickListener {
             if (bubbleMoved) {
                 bubbleMoved = false
-                params.x = 0
+
+                if (params.x > (systemInfoController.displayDimension().width / 2)) {
+                    params.x = systemInfoController.displayDimension().width
+                } else {
+                    params.x = 0
+                }
+                bubblePosX = params.x
                 bubblePosY = params.y
 
+                sharedPreferenceController.save(Constants.bubblePosX, bubblePosX)
                 sharedPreferenceController.save(Constants.bubblePosY, bubblePosY)
 
                 bubbleParamsStore = params
@@ -216,7 +242,12 @@ class FloatingService : Service() {
         val layoutParams = WindowManager.LayoutParams()
 
         layoutParams.gravity = Gravity.CENTER
-        layoutParams.type = WindowManager.LayoutParams.TYPE_SYSTEM_ALERT
+        if (systemInfoController.currentAndroidApi() >= Build.VERSION_CODES.O) {
+            @RequiresApi(Build.VERSION_CODES.O)
+            layoutParams.type = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
+        } else {
+            layoutParams.type = WindowManager.LayoutParams.TYPE_SYSTEM_ALERT
+        }
         layoutParams.width = WindowManager.LayoutParams.MATCH_PARENT
         layoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT
         layoutParams.alpha = 1.0f

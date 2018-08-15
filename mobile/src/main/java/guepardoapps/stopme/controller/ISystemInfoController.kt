@@ -19,6 +19,7 @@ interface ISystemInfoController {
     fun checkAPI23SystemPermission(permissionRequestId: Int): Boolean
     fun mayReadNotifications(contentResolver: ContentResolver, packageName: String): Boolean
 
+    fun canDrawOverlay(): Boolean
     fun displayDimension(): Display
     fun isScreeOn(): Boolean
     fun setScreenOff(removeFlags: IntArray, timeoutMs: Int)
