@@ -8,6 +8,6 @@ interface IClockService {
     val timePublishSubject: PublishSubject<RxTime>
     fun initialize(context: Context)
     fun start()
-    fun pause()
+    fun round()
     fun stop()
 }

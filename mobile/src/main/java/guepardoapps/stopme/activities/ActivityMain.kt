@@ -25,9 +25,6 @@ import io.reactivex.schedulers.Schedulers
 class ActivityMain : Activity() {
     private val tag: String = ActivityMain::class.java.simpleName
 
-    private lateinit var sharedPrefController: SharedPreferenceController
-    private lateinit var systemController: SystemInfoController
-
     private lateinit var navigationService: NavigationService
 
     private var minuteView: TextView? = null
@@ -40,15 +37,13 @@ class ActivityMain : Activity() {
     private var btnExport: Button? = null
     private var btnClear: Button? = null
     private var btnStart: Button? = null
-    private var btnPause: Button? = null
+    private var btnRound: Button? = null
     private var btnStop: Button? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.side_main)
 
-        sharedPrefController = SharedPreferenceController(this)
-        systemController = SystemInfoController(this)
         navigationService = NavigationService(this)
 
         findViews()
@@ -86,9 +81,9 @@ class ActivityMain : Activity() {
         btnSettings = findViewById(R.id.btnSettings)
         btnClose = findViewById(R.id.btnClose)
         btnExport = findViewById(R.id.timeValue)
-        btnClear = findViewById(R.id.clearButton)
+        btnClear = findViewById(R.id.btnClear)
         btnStart = findViewById(R.id.btnStart)
-        btnPause = findViewById(R.id.btnPause)
+        btnRound = findViewById(R.id.btnRound)
         btnStop = findViewById(R.id.btnStop)
     }
 
@@ -100,7 +95,7 @@ class ActivityMain : Activity() {
         btnExport?.setOnClickListener { MailService(this).sendMail("Times", btnExport?.text.toString(), arrayListOf(), true) }
         btnClear?.setOnClickListener { btnExport?.text = "" }
         btnStart?.setOnClickListener { ClockService.instance.start() }
-        btnPause?.setOnClickListener { ClockService.instance.pause() }
+        btnRound?.setOnClickListener { ClockService.instance.round() }
         btnStop?.setOnClickListener {
             ClockService.instance.stop()
 
@@ -147,8 +142,8 @@ class ActivityMain : Activity() {
     }
 
     private fun tryToStartService() {
-        if (!systemController.isServiceRunning(FloatingService::class.java)
-                && sharedPrefController.load(Constants.bubbleState, false) as Boolean) {
+        if (!SystemInfoController(this).isServiceRunning(FloatingService::class.java)
+                && SharedPreferenceController(this).load(Constants.bubbleState, false) as Boolean) {
             startService(Intent(this, FloatingService::class.java))
         }
     }

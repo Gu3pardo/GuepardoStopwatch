@@ -60,7 +60,7 @@ class ClockService private constructor() : IClockService, Disposable {
         }
     }
 
-    override fun pause() {
+    override fun round() {
         if (running) {
             val roundTimeInMillis = SystemClock.uptimeMillis() - roundStartTime
             roundList.add(roundTimeInMillis)

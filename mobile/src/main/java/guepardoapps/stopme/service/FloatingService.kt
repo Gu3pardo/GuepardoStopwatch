@@ -52,7 +52,7 @@ class FloatingService : Service() {
     private var btnExport: Button? = null
     private var btnClear: Button? = null
     private var btnStart: Button? = null
-    private var btnPause: Button? = null
+    private var btnRound: Button? = null
     private var btnStop: Button? = null
 
     override fun onBind(intent: Intent?): IBinder? {
@@ -206,9 +206,9 @@ class FloatingService : Service() {
         btnSettings = stopwatchView?.findViewById(R.id.btnSettings)
         btnClose = stopwatchView?.findViewById(R.id.btnClose)
         btnExport = stopwatchView?.findViewById(R.id.timeValue)
-        btnClear = stopwatchView?.findViewById(R.id.clearButton)
+        btnClear = stopwatchView?.findViewById(R.id.btnClear)
         btnStart = stopwatchView?.findViewById(R.id.btnStart)
-        btnPause = stopwatchView?.findViewById(R.id.btnPause)
+        btnRound = stopwatchView?.findViewById(R.id.btnRound)
         btnStop = stopwatchView?.findViewById(R.id.btnStop)
     }
 
@@ -220,7 +220,7 @@ class FloatingService : Service() {
         btnExport?.setOnClickListener { MailService(this).sendMail("Times", btnExport?.text.toString(), arrayListOf(), true) }
         btnClear?.setOnClickListener { btnExport?.text = "" }
         btnStart?.setOnClickListener { ClockService.instance.start() }
-        btnPause?.setOnClickListener { ClockService.instance.pause() }
+        btnRound?.setOnClickListener { ClockService.instance.round() }
         btnStop?.setOnClickListener {
             ClockService.instance.stop()
 
@@ -304,7 +304,7 @@ class FloatingService : Service() {
         btnExport = null
         btnClear = null
         btnStart = null
-        btnPause = null
+        btnRound = null
         btnStop = null
     }
 }

@@ -1,6 +1,5 @@
 package guepardoapps.stopme.controller
 
-import android.annotation.TargetApi
 import android.app.Activity
 import android.app.ActivityManager
 import android.content.ContentResolver
@@ -57,7 +56,6 @@ class SystemInfoController(@NonNull private val context: Context) : ISystemInfoC
                 .any { serviceInfo -> serviceInfo.id == serviceId }
     }
 
-    @TargetApi(Build.VERSION_CODES.M)
     override fun isBaseActivityRunning(): Boolean {
         return activityManager.appTasks!!
                 .any { task -> task.taskInfo.baseActivity.packageName == context.packageName }
@@ -67,7 +65,6 @@ class SystemInfoController(@NonNull private val context: Context) : ISystemInfoC
         return Build.VERSION.SDK_INT
     }
 
-    @TargetApi(Build.VERSION_CODES.M)
     override fun checkAPI23SystemPermission(permissionRequestId: Int): Boolean {
         if (!Settings.canDrawOverlays(context)) {
             val intent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + context.packageName))
@@ -86,7 +83,6 @@ class SystemInfoController(@NonNull private val context: Context) : ISystemInfoC
         }
     }
 
-    @TargetApi(Build.VERSION_CODES.M)
     override fun canDrawOverlay(): Boolean {
         return Settings.canDrawOverlays(context)
     }
