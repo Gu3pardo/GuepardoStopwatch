@@ -6,10 +6,13 @@ import android.os.Handler
 import android.os.SystemClock
 import guepardoapps.stopme.extensions.replaceLast
 import guepardoapps.stopme.models.RxTime
+import guepardoapps.stopme.utils.Logger
 import io.reactivex.disposables.Disposable
 import io.reactivex.subjects.PublishSubject
 
 class ClockService private constructor() : IClockService, Disposable {
+    private val tag: String = ClockService::class.java.simpleName
+
     private var context: Context? = null
 
     private var stopwatchHandler: Handler = Handler()
@@ -31,6 +34,14 @@ class ClockService private constructor() : IClockService, Disposable {
     }
 
     override val timePublishSubject: PublishSubject<RxTime> = PublishSubject.create<RxTime>()!!
+
+    override var isRunning: Boolean
+        get() {
+            return running
+        }
+        set(value) {
+            Logger.instance.warning(tag, "Setting of isRunning is not possible")
+        }
 
     private object Holder {
         @SuppressLint("StaticFieldLeak")

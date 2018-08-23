@@ -8,6 +8,8 @@
     android:padding="10dp"
     tools:context="guepardoapps.stopme.activities.ActivityMain">
 
+    <!-- https://icons8.de/icon/new-icons/material -->
+
     <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -136,17 +138,50 @@
                 android:layout_below="@+id/textTimerMin"
                 android:layout_margin="5dp">
 
-                <com.rey.material.widget.Button
+                <TextView
                     android:id="@+id/timeValue"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:background="@color/White"
+                    android:textAlignment="center"
                     android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:textColor="@color/PrimaryText"
-                    app:rd_delayClick="none"
-                    app:rd_enable="true"
-                    app:rd_rippleColor="@color/colorPrimary"
-                    app:rd_rippleType="touch" />
+                    android:textColor="@color/PrimaryText" />
             </ScrollView>
+
+            <com.rey.material.widget.FloatingActionButton
+                android:id="@+id/btnClear"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@+id/btnRound"
+                android:layout_alignParentEnd="true"
+                android:layout_margin="5dp"
+                android:contentDescription="@string/contentDescription"
+                android:gravity="center_horizontal|center_vertical"
+                android:visibility="invisible"
+                app:fab_iconSize="30dp"
+                app:fab_iconSrc="@mipmap/leererpapierkorb"
+                app:fab_radius="17dp"
+                app:rd_delayClick="none"
+                app:rd_enable="true"
+                app:rd_rippleColor="@color/colorPrimary"
+                app:rd_rippleType="touch" />
+
+            <com.rey.material.widget.FloatingActionButton
+                android:id="@+id/btnMail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@+id/btnRound"
+                android:layout_margin="5dp"
+                android:layout_toStartOf="@+id/btnClear"
+                android:contentDescription="@string/contentDescription"
+                android:gravity="center_horizontal|center_vertical"
+                app:fab_iconSize="30dp"
+                app:fab_iconSrc="@mipmap/mail"
+                app:fab_radius="17dp"
+                app:rd_delayClick="none"
+                app:rd_enable="true"
+                app:rd_rippleColor="@color/colorPrimary"
+                app:rd_rippleType="touch" />
 
             <com.rey.material.widget.FloatingActionButton
                 android:id="@+id/btnStart"
@@ -159,7 +194,7 @@
                 android:gravity="center_horizontal|center_vertical"
                 app:fab_iconSize="30dp"
                 app:fab_iconSrc="@mipmap/spielen"
-                app:fab_radius="17dp"
+                app:fab_radius="25dp"
                 app:rd_delayClick="none"
                 app:rd_enable="true"
                 app:rd_rippleColor="@color/colorPrimary"
@@ -178,7 +213,7 @@
                 android:gravity="center_horizontal|center_vertical"
                 app:fab_iconSize="30dp"
                 app:fab_iconSrc="@mipmap/neustart"
-                app:fab_radius="17dp"
+                app:fab_radius="25dp"
                 app:rd_delayClick="none"
                 app:rd_enable="true"
                 app:rd_rippleColor="@color/colorPrimary"
@@ -195,24 +230,7 @@
                 android:gravity="center_horizontal|center_vertical"
                 app:fab_iconSize="30dp"
                 app:fab_iconSrc="@mipmap/stop"
-                app:fab_radius="17dp"
-                app:rd_delayClick="none"
-                app:rd_enable="true"
-                app:rd_rippleColor="@color/colorPrimary"
-                app:rd_rippleType="touch" />
-
-            <com.rey.material.widget.FloatingActionButton
-                android:id="@+id/btnClear"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_above="@+id/btnRound"
-                android:layout_centerHorizontal="true"
-                android:layout_margin="5dp"
-                android:contentDescription="@string/contentDescription"
-                android:gravity="center_horizontal|center_vertical"
-                app:fab_iconSize="30dp"
-                app:fab_iconSrc="@mipmap/leererpapierkorb"
-                app:fab_radius="17dp"
+                app:fab_radius="25dp"
                 app:rd_delayClick="none"
                 app:rd_enable="true"
                 app:rd_rippleColor="@color/colorPrimary"

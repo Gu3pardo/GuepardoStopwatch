@@ -8,7 +8,7 @@ buildscript {
     ext.junit_platform_version = '1.0.1'
     ext.junit_platform_runner_version = '1.0.0'
     ext.junit_version = '4.12'
-    ext.kotlin_version = '1.2.60'
+    ext.kotlin_version = '1.2.61'
     ext.mockito_version = '2.10.0'
     ext.multi_dex_version = '1.0.3'
     ext.reactivex_version = '2.2.0'

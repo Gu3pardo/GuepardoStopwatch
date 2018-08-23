@@ -1,4 +1,4 @@
-apply plugin: 'com.android.application'
+apply plugin: "com.android.application"
 apply plugin: "kotlin-android"
 apply plugin: "kotlin-android-extensions"
 
@@ -13,7 +13,7 @@ android {
         minSdkVersion 23
         targetSdkVersion 28
         versionCode 10200
-        versionName "1.2.0.180822"
+        versionName "1.2.0.180823"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
         testOptions {
@@ -21,13 +21,13 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_10
-        targetCompatibility JavaVersion.VERSION_1_10
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
     buildTypes {
         release {
             minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
         }
     }
     productFlavors {

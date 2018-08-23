@@ -16,7 +16,6 @@ import android.view.WindowManager
 import android.widget.ImageView
 import android.widget.ScrollView
 import android.widget.TextView
-import com.rey.material.widget.Button
 import com.rey.material.widget.FloatingActionButton
 import guepardoapps.stopme.R
 import guepardoapps.stopme.common.Constants
@@ -49,11 +48,12 @@ class FloatingService : Service() {
     private var btnAbout: FloatingActionButton? = null
     private var btnSettings: FloatingActionButton? = null
     private var btnClose: FloatingActionButton? = null
-    private var btnExport: Button? = null
-    private var btnClear: Button? = null
-    private var btnStart: Button? = null
-    private var btnRound: Button? = null
-    private var btnStop: Button? = null
+    private var btnClear: FloatingActionButton? = null
+    private var btnMail: FloatingActionButton? = null
+    private var btnStart: FloatingActionButton? = null
+    private var btnRound: FloatingActionButton? = null
+    private var btnStop: FloatingActionButton? = null
+    private var timeTextView: TextView? = null
 
     override fun onBind(intent: Intent?): IBinder? {
         return null
@@ -187,6 +187,7 @@ class FloatingService : Service() {
                 findViews()
                 addActionsToViews()
                 attachViews()
+                checkBtnClear()
             }
         }
 
@@ -205,11 +206,12 @@ class FloatingService : Service() {
         btnAbout = stopwatchView?.findViewById(R.id.btnAbout)
         btnSettings = stopwatchView?.findViewById(R.id.btnSettings)
         btnClose = stopwatchView?.findViewById(R.id.btnClose)
-        btnExport = stopwatchView?.findViewById(R.id.timeValue)
         btnClear = stopwatchView?.findViewById(R.id.btnClear)
+        btnMail = stopwatchView?.findViewById(R.id.btnMail)
         btnStart = stopwatchView?.findViewById(R.id.btnStart)
         btnRound = stopwatchView?.findViewById(R.id.btnRound)
         btnStop = stopwatchView?.findViewById(R.id.btnStop)
+        timeTextView = stopwatchView?.findViewById(R.id.timeValue)
     }
 
     @SuppressLint("SetTextI18n")
@@ -217,9 +219,9 @@ class FloatingService : Service() {
         btnAbout?.visibility = View.GONE
         btnSettings?.visibility = View.GONE
         btnClose?.setOnClickListener { removeViews() }
-        btnExport?.setOnClickListener { MailService(this).sendMail("Times", btnExport?.text.toString(), arrayListOf(), true) }
-        btnClear?.setOnClickListener { btnExport?.text = "" }
-        btnStart?.setOnClickListener { ClockService.instance.start() }
+        btnClear?.setOnClickListener { timeTextView?.text = "" }
+        btnMail?.setOnClickListener { MailService(this).sendMail("Times", timeTextView?.text.toString(), arrayListOf(), true) }
+        btnStart?.setOnClickListener { ClockService.instance.start(); btnClear?.visibility = View.INVISIBLE; }
         btnRound?.setOnClickListener { ClockService.instance.round() }
         btnStop?.setOnClickListener {
             ClockService.instance.stop()
@@ -227,13 +229,15 @@ class FloatingService : Service() {
             val minutes = minuteView?.text.toString()
             val seconds = secondsView?.text.toString()
             val milliseconds = milliSecondsView?.text.toString()
-            btnExport?.text = "${btnExport?.text}\nTime = $minutes:$seconds:$milliseconds\n ________________________ \n\n"
+            timeTextView?.text = "________________________ \n\n${timeTextView?.text}\nTime = $minutes:$seconds:$milliseconds\n ________________________ \n\n"
 
             scrollView?.fullScroll(View.FOCUS_DOWN)
 
             minuteView?.setText(R.string.dummyTime)
             secondsView?.setText(R.string.dummyTime)
             milliSecondsView?.setText(R.string.dummyTime)
+
+            btnClear?.visibility = View.VISIBLE
         }
     }
 
@@ -274,7 +278,7 @@ class FloatingService : Service() {
 
         var btnExportText = ""
         rxTime.rounds.forEachIndexed { index, roundTimeInMillis -> btnExportText += createRoundText(index, roundTimeInMillis) }
-        btnExport?.text = btnExportText
+        timeTextView?.text = btnExportText
 
         scrollView?.fullScroll(View.FOCUS_DOWN)
     }
@@ -301,10 +305,19 @@ class FloatingService : Service() {
         btnAbout = null
         btnSettings = null
         btnClose = null
-        btnExport = null
         btnClear = null
+        btnMail = null
         btnStart = null
         btnRound = null
         btnStop = null
+        timeTextView = null
+    }
+
+    private fun checkBtnClear() {
+        if (ClockService.instance.isRunning) {
+            btnClear?.visibility = View.INVISIBLE
+        } else {
+            btnClear?.visibility = View.VISIBLE
+        }
     }
 }

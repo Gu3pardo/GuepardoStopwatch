@@ -7,7 +7,6 @@ import android.os.Bundle
 import android.view.View
 import android.widget.ScrollView
 import android.widget.TextView
-import com.rey.material.widget.Button
 import com.rey.material.widget.FloatingActionButton
 import guepardoapps.stopme.R
 import guepardoapps.stopme.common.Constants
@@ -34,11 +33,12 @@ class ActivityMain : Activity() {
     private var btnAbout: FloatingActionButton? = null
     private var btnSettings: FloatingActionButton? = null
     private var btnClose: FloatingActionButton? = null
-    private var btnExport: Button? = null
-    private var btnClear: Button? = null
-    private var btnStart: Button? = null
-    private var btnRound: Button? = null
-    private var btnStop: Button? = null
+    private var btnClear: FloatingActionButton? = null
+    private var btnMail: FloatingActionButton? = null
+    private var btnStart: FloatingActionButton? = null
+    private var btnRound: FloatingActionButton? = null
+    private var btnStop: FloatingActionButton? = null
+    private var timeTextView: TextView? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,6 +48,7 @@ class ActivityMain : Activity() {
 
         findViews()
         addActionsToViews()
+        checkBtnClear()
 
         if (ClockService.instance.isDisposed) {
             ClockService.instance.initialize(this)
@@ -58,6 +59,11 @@ class ActivityMain : Activity() {
                 .subscribe(
                         { response -> updateViews(response) },
                         { error -> Logger.instance.error(tag, error) })
+    }
+
+    public override fun onResume() {
+        super.onResume()
+        checkBtnClear()
     }
 
     public override fun onPause() {
@@ -80,11 +86,12 @@ class ActivityMain : Activity() {
         btnAbout = findViewById(R.id.btnAbout)
         btnSettings = findViewById(R.id.btnSettings)
         btnClose = findViewById(R.id.btnClose)
-        btnExport = findViewById(R.id.timeValue)
         btnClear = findViewById(R.id.btnClear)
+        btnMail = findViewById(R.id.btnMail)
         btnStart = findViewById(R.id.btnStart)
         btnRound = findViewById(R.id.btnRound)
         btnStop = findViewById(R.id.btnStop)
+        timeTextView = findViewById(R.id.timeValue)
     }
 
     @SuppressLint("SetTextI18n")
@@ -92,9 +99,9 @@ class ActivityMain : Activity() {
         btnAbout?.setOnClickListener { navigationService.navigate(ActivityAbout::class.java, false) }
         btnSettings?.setOnClickListener { navigationService.navigate(ActivitySettings::class.java, false) }
         btnClose?.setOnClickListener { finish() }
-        btnExport?.setOnClickListener { MailService(this).sendMail("Times", btnExport?.text.toString(), arrayListOf(), true) }
-        btnClear?.setOnClickListener { btnExport?.text = "" }
-        btnStart?.setOnClickListener { ClockService.instance.start() }
+        btnClear?.setOnClickListener { timeTextView?.text = "" }
+        btnMail?.setOnClickListener { MailService(this).sendMail("Times", timeTextView?.text.toString(), arrayListOf(), true) }
+        btnStart?.setOnClickListener { ClockService.instance.start(); btnClear?.visibility = View.INVISIBLE; }
         btnRound?.setOnClickListener { ClockService.instance.round() }
         btnStop?.setOnClickListener {
             ClockService.instance.stop()
@@ -102,13 +109,15 @@ class ActivityMain : Activity() {
             val minutes = minuteView?.text.toString()
             val seconds = secondsView?.text.toString()
             val milliseconds = milliSecondsView?.text.toString()
-            btnExport?.text = "${btnExport?.text}\nTime = $minutes:$seconds:$milliseconds\n ________________________ \n\n"
+            timeTextView?.text = "________________________ \n\n${timeTextView?.text}\nTime = $minutes:$seconds:$milliseconds\n ________________________ \n\n"
 
             scrollView?.fullScroll(View.FOCUS_DOWN)
 
             minuteView?.setText(R.string.dummyTime)
             secondsView?.setText(R.string.dummyTime)
             milliSecondsView?.setText(R.string.dummyTime)
+
+            btnClear?.visibility = View.VISIBLE
         }
     }
 
@@ -128,7 +137,7 @@ class ActivityMain : Activity() {
 
         var btnExportText = ""
         rxTime.rounds.forEachIndexed { index, roundTimeInMillis -> btnExportText += createRoundText(index, roundTimeInMillis) }
-        btnExport?.text = btnExportText
+        timeTextView?.text = btnExportText
 
         scrollView?.fullScroll(View.FOCUS_DOWN)
     }
@@ -145,6 +154,14 @@ class ActivityMain : Activity() {
         if (!SystemInfoController(this).isServiceRunning(FloatingService::class.java)
                 && SharedPreferenceController(this).load(Constants.bubbleState, false) as Boolean) {
             startService(Intent(this, FloatingService::class.java))
+        }
+    }
+
+    private fun checkBtnClear() {
+        if (ClockService.instance.isRunning) {
+            btnClear?.visibility = View.INVISIBLE
+        } else {
+            btnClear?.visibility = View.VISIBLE
         }
     }
 }
