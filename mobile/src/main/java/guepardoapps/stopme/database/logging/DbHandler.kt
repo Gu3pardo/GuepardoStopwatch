@@ -191,8 +191,8 @@ internal class DbHandler(context: Context)
     }
 
     companion object {
-        private const val DatabaseVersion = 1
-        private const val DatabaseName = "guepardoapps-vertical-seek-bar-view.db"
+        private const val DatabaseVersion = 2
+        private const val DatabaseName = "guepardoapps-stopme.db"
         private const val DatabaseTable = "logging"
 
         private const val ColumnId = "_id"
