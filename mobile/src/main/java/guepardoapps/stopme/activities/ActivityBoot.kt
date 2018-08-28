@@ -10,6 +10,9 @@ import guepardoapps.stopme.controller.SystemInfoController
 import guepardoapps.stopme.service.NavigationService
 
 class ActivityBoot : Activity() {
+
+    private val delayInMillis: Long = 1500
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.side_boot)
@@ -32,10 +35,10 @@ class ActivityBoot : Activity() {
 
         if (systemInfoController.currentAndroidApi() >= android.os.Build.VERSION_CODES.M) {
             if (systemInfoController.checkAPI23SystemPermission(Constants.systemPermissionId)) {
-                Handler().postDelayed({ navigationService.navigate(ActivityMain::class.java, true) }, 1500)
+                Handler().postDelayed({ navigationService.navigate(ActivityMain::class.java, true) }, delayInMillis)
             }
         } else {
-            Handler().postDelayed({ navigationService.navigate(ActivityMain::class.java, true) }, 1500)
+            Handler().postDelayed({ navigationService.navigate(ActivityMain::class.java, true) }, delayInMillis)
         }
     }
 }

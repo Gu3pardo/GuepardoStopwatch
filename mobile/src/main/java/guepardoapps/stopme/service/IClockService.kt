@@ -6,7 +6,6 @@ import io.reactivex.subjects.PublishSubject
 
 interface IClockService {
     val timePublishSubject: PublishSubject<RxTime>
-    var isRunning: Boolean
     fun initialize(context: Context)
     fun start()
     fun round()

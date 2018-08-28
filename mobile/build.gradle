@@ -13,7 +13,7 @@ android {
         minSdkVersion 23
         targetSdkVersion 28
         versionCode 10200
-        versionName "1.2.0.180823"
+        versionName "1.2.0.180828"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
         testOptions {
@@ -62,7 +62,14 @@ dependencies {
     implementation "com.android.support:support-compat:$android_support_version"
     implementation "com.android.support:support-v4:$android_support_version"
 
+    implementation "com.evernote:android-state:$androidstate_version"
+    // Java only project
+    annotationProcessor "com.evernote:android-state-processor:$androidstate_version"
+    // Kotlin with or without Java
+    kapt "com.evernote:android-state-processor:$androidstate_version"
+
     implementation "com.github.AndreaCioccarelli:CryptoPrefs:$cryptoprefs_version"
+    implementation "com.github.daniel-stoneuk:material-about-library:$materialabout_version"
     implementation "com.github.rey5137:material:$rey_material_version"
 
     implementation "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"

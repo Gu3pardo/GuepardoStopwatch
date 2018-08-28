@@ -14,16 +14,13 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.WindowManager
 import android.widget.ImageView
-import android.widget.ScrollView
-import android.widget.TextView
-import com.rey.material.widget.FloatingActionButton
 import guepardoapps.stopme.R
 import guepardoapps.stopme.common.Constants
 import guepardoapps.stopme.controller.SharedPreferenceController
 import guepardoapps.stopme.controller.SystemInfoController
-import guepardoapps.stopme.extensions.integerFormat
-import guepardoapps.stopme.models.RxTime
 import guepardoapps.stopme.utils.Logger
+import guepardoapps.stopme.views.ClockView
+import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 
 // https://stackoverflow.com/questions/7569937/unable-to-add-window-android-view-viewrootw44da9bc0-permission-denied-for-t#answer-34061521
@@ -41,19 +38,7 @@ class FloatingService : Service() {
     private var bubbleMoved: Boolean = false
 
     private var stopwatchView: View? = null
-    private var minuteView: TextView? = null
-    private var secondsView: TextView? = null
-    private var milliSecondsView: TextView? = null
-    private var scrollView: ScrollView? = null
-    private var btnAbout: FloatingActionButton? = null
-    private var btnSettings: FloatingActionButton? = null
-    private var btnClose: FloatingActionButton? = null
-    private var btnClear: FloatingActionButton? = null
-    private var btnMail: FloatingActionButton? = null
-    private var btnStart: FloatingActionButton? = null
-    private var btnRound: FloatingActionButton? = null
-    private var btnStop: FloatingActionButton? = null
-    private var timeTextView: TextView? = null
+    private var subscription: Disposable? = null
 
     override fun onBind(intent: Intent?): IBinder? {
         return null
@@ -71,17 +56,18 @@ class FloatingService : Service() {
         if (ClockService.instance.isDisposed) {
             ClockService.instance.initialize(this)
         }
-
-        ClockService.instance.timePublishSubject
-                .subscribeOn(Schedulers.io())
-                .subscribe(
-                        { response -> updateViews(response) },
-                        { error -> Logger.instance.error(tag, error) })
     }
 
     override fun onDestroy() {
         super.onDestroy()
         ClockService.instance.dispose()
+
+        subscription?.dispose()
+        subscription = null
+
+        windowManager.removeView(stopwatchView)
+        stopwatchView = null
+
         windowManager.removeView(bubbleView)
     }
 
@@ -184,140 +170,43 @@ class FloatingService : Service() {
                 bubbleParamsStore = params
                 windowManager.updateViewLayout(bubbleView, bubbleParamsStore)
             } else {
-                findViews()
-                addActionsToViews()
-                attachViews()
-                checkBtnClear()
+                stopwatchView = View.inflate(applicationContext, R.layout.side_main, null)
+
+                val clockView: ClockView = stopwatchView!!.findViewById(R.id.clockView)
+                clockView.setCloseCallback {
+                    subscription?.dispose()
+                    subscription = null
+
+                    windowManager.removeView(stopwatchView)
+                    stopwatchView = null
+                }
+
+                subscription = ClockService.instance.timePublishSubject
+                        .subscribeOn(Schedulers.io())
+                        .subscribe(
+                                { response -> clockView.updateViews(response) },
+                                { error -> Logger.instance.error(tag, error) })
+
+                val layoutParams = WindowManager.LayoutParams()
+
+                layoutParams.gravity = Gravity.CENTER
+                if (systemInfoController.currentAndroidApi() >= Build.VERSION_CODES.O) {
+                    @RequiresApi(Build.VERSION_CODES.O)
+                    layoutParams.type = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
+                } else {
+                    layoutParams.type = WindowManager.LayoutParams.TYPE_SYSTEM_ALERT
+                }
+                layoutParams.width = WindowManager.LayoutParams.MATCH_PARENT
+                layoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT
+                layoutParams.alpha = 1.0f
+                layoutParams.packageName = packageName
+                layoutParams.buttonBrightness = 1f
+                layoutParams.windowAnimations = android.R.style.Animation_Dialog
+
+                windowManager.addView(stopwatchView, layoutParams)
             }
         }
 
         windowManager.addView(bubbleView, bubbleParamsStore)
-    }
-
-    private fun findViews() {
-        stopwatchView = View.inflate(applicationContext, R.layout.side_main, null)
-
-        minuteView = stopwatchView?.findViewById(R.id.textTimerMin)
-        secondsView = stopwatchView?.findViewById(R.id.textTimerSec)
-        milliSecondsView = stopwatchView?.findViewById(R.id.textTimerMsec)
-
-        scrollView = stopwatchView?.findViewById(R.id.scrollView)
-
-        btnAbout = stopwatchView?.findViewById(R.id.btnAbout)
-        btnSettings = stopwatchView?.findViewById(R.id.btnSettings)
-        btnClose = stopwatchView?.findViewById(R.id.btnClose)
-        btnClear = stopwatchView?.findViewById(R.id.btnClear)
-        btnMail = stopwatchView?.findViewById(R.id.btnMail)
-        btnStart = stopwatchView?.findViewById(R.id.btnStart)
-        btnRound = stopwatchView?.findViewById(R.id.btnRound)
-        btnStop = stopwatchView?.findViewById(R.id.btnStop)
-        timeTextView = stopwatchView?.findViewById(R.id.timeValue)
-    }
-
-    @SuppressLint("SetTextI18n")
-    private fun addActionsToViews() {
-        btnAbout?.visibility = View.GONE
-        btnSettings?.visibility = View.GONE
-        btnClose?.setOnClickListener { removeViews() }
-        btnClear?.setOnClickListener { timeTextView?.text = "" }
-        btnMail?.setOnClickListener { MailService(this).sendMail("Times", timeTextView?.text.toString(), arrayListOf(), true) }
-        btnStart?.setOnClickListener { ClockService.instance.start(); btnClear?.visibility = View.INVISIBLE; }
-        btnRound?.setOnClickListener { ClockService.instance.round() }
-        btnStop?.setOnClickListener {
-            ClockService.instance.stop()
-
-            val minutes = minuteView?.text.toString()
-            val seconds = secondsView?.text.toString()
-            val milliseconds = milliSecondsView?.text.toString()
-            timeTextView?.text = "________________________ \n\n${timeTextView?.text}\nTime = $minutes:$seconds:$milliseconds\n ________________________ \n\n"
-
-            scrollView?.fullScroll(View.FOCUS_DOWN)
-
-            minuteView?.setText(R.string.dummyTime)
-            secondsView?.setText(R.string.dummyTime)
-            milliSecondsView?.setText(R.string.dummyTime)
-
-            btnClear?.visibility = View.VISIBLE
-        }
-    }
-
-    @Suppress("DEPRECATION")
-    private fun attachViews() {
-        val layoutParams = WindowManager.LayoutParams()
-
-        layoutParams.gravity = Gravity.CENTER
-        if (systemInfoController.currentAndroidApi() >= Build.VERSION_CODES.O) {
-            @RequiresApi(Build.VERSION_CODES.O)
-            layoutParams.type = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
-        } else {
-            layoutParams.type = WindowManager.LayoutParams.TYPE_SYSTEM_ALERT
-        }
-        layoutParams.width = WindowManager.LayoutParams.MATCH_PARENT
-        layoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT
-        layoutParams.alpha = 1.0f
-        layoutParams.packageName = packageName
-        layoutParams.buttonBrightness = 1f
-        layoutParams.windowAnimations = android.R.style.Animation_Dialog
-
-        windowManager.addView(stopwatchView, layoutParams)
-    }
-
-    private fun updateViews(rxTime: RxTime?) {
-        if (rxTime === null || !rxTime.running) {
-            return
-        }
-
-        var finalSeconds = (rxTime.timeInMillisFinal / 1000).toInt()
-        val finalMinutes = finalSeconds / 60
-        finalSeconds %= 60
-        val finalMilliSeconds = (rxTime.timeInMillisFinal % 1000).toInt()
-
-        minuteView?.text = finalMinutes.integerFormat(2)
-        secondsView?.text = finalSeconds.integerFormat(2)
-        milliSecondsView?.text = finalMilliSeconds.integerFormat(2)
-
-        var btnExportText = ""
-        rxTime.rounds.forEachIndexed { index, roundTimeInMillis -> btnExportText += createRoundText(index, roundTimeInMillis) }
-        timeTextView?.text = btnExportText
-
-        scrollView?.fullScroll(View.FOCUS_DOWN)
-    }
-
-    private fun createRoundText(index: Int, roundTimeInMillis: Long): String {
-        var roundSeconds = (roundTimeInMillis / 1000).toInt()
-        val roundMinutes = roundSeconds / 60
-        roundSeconds %= 60
-        val roundMilliSeconds = (roundTimeInMillis % 1000).toInt()
-        return "Round ${index + 1} = $roundMinutes:${roundSeconds.integerFormat(2)}:${roundMilliSeconds.integerFormat(3)}\n"
-    }
-
-    private fun removeViews() {
-        windowManager.removeView(stopwatchView)
-
-        stopwatchView = null
-
-        minuteView = null
-        secondsView = null
-        milliSecondsView = null
-
-        scrollView = null
-
-        btnAbout = null
-        btnSettings = null
-        btnClose = null
-        btnClear = null
-        btnMail = null
-        btnStart = null
-        btnRound = null
-        btnStop = null
-        timeTextView = null
-    }
-
-    private fun checkBtnClear() {
-        if (ClockService.instance.isRunning) {
-            btnClear?.visibility = View.INVISIBLE
-        } else {
-            btnClear?.visibility = View.VISIBLE
-        }
     }
 }

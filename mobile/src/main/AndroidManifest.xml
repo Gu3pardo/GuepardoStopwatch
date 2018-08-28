@@ -22,7 +22,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activities.ActivityAbout" />
+        <activity
+            android:name=".activities.ActivityAbout"
+            android:theme="@style/AppTheme.MaterialAboutActivity" />
         <activity android:name=".activities.ActivityMain" />
         <activity android:name=".activities.ActivitySettings" />
 
