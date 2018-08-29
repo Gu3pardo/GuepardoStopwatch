@@ -3,7 +3,7 @@ package guepardoapps.stopme.utils
 import android.content.Context
 import android.support.annotation.NonNull
 import android.util.Log
-import guepardoapps.stopme.database.logging.DbHandler
+import guepardoapps.stopme.database.logging.DbLogging
 import guepardoapps.stopme.database.logging.DbLog
 import guepardoapps.stopme.database.logging.Severity
 import java.sql.Date
@@ -12,7 +12,7 @@ import java.util.*
 internal class Logger private constructor() {
     private var loggingEnabled: Boolean = true
     private var writeToDatabaseEnabled: Boolean = true
-    private var dbHandler: DbHandler? = null
+    private var dbHandler: DbLogging? = null
 
     private object Holder {
         val instance: Logger = Logger()
@@ -26,7 +26,7 @@ internal class Logger private constructor() {
         if (dbHandler != null) {
             return
         }
-        dbHandler = DbHandler(context)
+        dbHandler = DbLogging(context)
     }
 
     fun <T> verbose(@NonNull tag: String, @NonNull description: T) {
