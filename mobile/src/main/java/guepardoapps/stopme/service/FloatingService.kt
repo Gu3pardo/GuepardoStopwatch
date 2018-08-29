@@ -62,13 +62,16 @@ class FloatingService : Service() {
         super.onDestroy()
         ClockService.instance.dispose()
 
-        subscription?.dispose()
-        subscription = null
-
-        windowManager.removeView(stopwatchView)
-        stopwatchView = null
-
-        windowManager.removeView(bubbleView)
+        try {
+            subscription?.dispose()
+            windowManager.removeView(stopwatchView)
+            windowManager.removeView(bubbleView)
+        } catch (exception: Exception) {
+            Logger.instance.error(tag, exception)
+        } finally {
+            subscription = null
+            stopwatchView = null
+        }
     }
 
     @Suppress("DEPRECATION")
