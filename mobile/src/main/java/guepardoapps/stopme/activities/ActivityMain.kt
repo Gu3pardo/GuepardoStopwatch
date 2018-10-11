@@ -7,14 +7,17 @@ import guepardoapps.stopme.R
 import guepardoapps.stopme.common.Constants
 import guepardoapps.stopme.controller.SharedPreferenceController
 import guepardoapps.stopme.controller.SystemInfoController
+import guepardoapps.stopme.logging.Logger
 import guepardoapps.stopme.service.ClockService
 import guepardoapps.stopme.service.FloatingService
-import guepardoapps.stopme.utils.Logger
+import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.side_main.*
 
 class ActivityMain : Activity() {
     private val tag: String = ActivityMain::class.java.simpleName
+
+    private lateinit var subscription: Disposable
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,7 +29,7 @@ class ActivityMain : Activity() {
             ClockService.instance.initialize(this)
         }
 
-        ClockService.instance.timePublishSubject
+        subscription = ClockService.instance.timePublishSubject
                 .subscribeOn(Schedulers.io())
                 .subscribe(
                         { response -> clockView.updateViews(response) },
@@ -45,6 +48,7 @@ class ActivityMain : Activity() {
     public override fun onDestroy() {
         super.onDestroy()
         tryToStartService()
+        subscription.dispose()
     }
 
     private fun tryToStartService() {

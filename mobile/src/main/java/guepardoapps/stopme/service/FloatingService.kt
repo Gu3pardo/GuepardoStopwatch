@@ -18,7 +18,7 @@ import guepardoapps.stopme.R
 import guepardoapps.stopme.common.Constants
 import guepardoapps.stopme.controller.SharedPreferenceController
 import guepardoapps.stopme.controller.SystemInfoController
-import guepardoapps.stopme.utils.Logger
+import guepardoapps.stopme.logging.Logger
 import guepardoapps.stopme.views.ClockView
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers

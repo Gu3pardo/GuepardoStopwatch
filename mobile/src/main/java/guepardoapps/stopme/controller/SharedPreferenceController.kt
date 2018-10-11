@@ -3,7 +3,7 @@ package guepardoapps.stopme.controller
 import android.content.Context
 import com.andreacioccarelli.cryptoprefs.CryptoPrefs
 import guepardoapps.stopme.common.Constants
-import guepardoapps.stopme.utils.Logger
+import guepardoapps.stopme.logging.Logger
 
 class SharedPreferenceController(context: Context) : ISharedPreferenceController {
     private val tag: String = SharedPreferenceController::class.java.simpleName

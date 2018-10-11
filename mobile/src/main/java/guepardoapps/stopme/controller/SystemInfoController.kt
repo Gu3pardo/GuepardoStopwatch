@@ -16,7 +16,7 @@ import android.view.Display
 import android.view.WindowManager
 import android.view.accessibility.AccessibilityEvent
 import android.view.accessibility.AccessibilityManager
-import guepardoapps.stopme.utils.Logger
+import guepardoapps.stopme.logging.Logger
 
 class SystemInfoController(@NonNull private val context: Context) : ISystemInfoController {
     private val tag: String = SystemInfoController::class.java.simpleName
