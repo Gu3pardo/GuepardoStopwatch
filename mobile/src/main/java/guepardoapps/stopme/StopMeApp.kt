@@ -1,7 +1,7 @@
 package guepardoapps.stopme
 
 import android.app.Application
-import guepardoapps.stopme.utils.Logger
+import guepardoapps.stopme.logging.Logger
 
 class StopMeApp : Application() {
     private val tag: String = StopMeApp::class.java.simpleName

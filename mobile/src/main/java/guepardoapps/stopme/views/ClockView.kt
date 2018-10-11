@@ -13,11 +13,11 @@ import guepardoapps.stopme.R
 import guepardoapps.stopme.activities.ActivityAbout
 import guepardoapps.stopme.activities.ActivitySettings
 import guepardoapps.stopme.extensions.integerFormat
+import guepardoapps.stopme.logging.Logger
 import guepardoapps.stopme.models.RxTime
 import guepardoapps.stopme.service.ClockService
 import guepardoapps.stopme.service.MailService
 import guepardoapps.stopme.service.NavigationService
-import guepardoapps.stopme.utils.Logger
 
 @SuppressLint("SetTextI18n")
 class ClockView(context: Context, attributeSet: AttributeSet?) : RelativeLayout(context, attributeSet) {

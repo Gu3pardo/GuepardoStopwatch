@@ -2,18 +2,15 @@ apply plugin: "com.android.application"
 apply plugin: "kotlin-android"
 apply plugin: "kotlin-android-extensions"
 
-// junit5 doesn't support android projects out of the box
-apply plugin: "de.mannodermaus.android-junit5"
-
 android {
     compileSdkVersion 28
-    buildToolsVersion "28.0.2"
+    buildToolsVersion "28.0.3"
     defaultConfig {
         applicationId "guepardoapps.stopme"
         minSdkVersion 23
         targetSdkVersion 28
-        versionCode 10202
-        versionName "1.2.2.180829"
+        versionCode 10203
+        versionName "1.2.3.181011"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
         testOptions {
@@ -76,23 +73,4 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
     testImplementation "junit:junit:$junit_version"
-    androidTestImplementation "com.android.support.test:runner:$test_runner_version"
-    androidTestImplementation "com.android.support.test.espresso:espresso-core:$test_espresso_version"
-
-    // required if you want to use Mockito for unit tests
-    testImplementation "org.mockito:mockito-core:$mockito_version"
-    // required if you want to use Mockito for Android tests
-    androidTestImplementation "org.mockito:mockito-android:$mockito_version"
-
-    testImplementation("org.jetbrains.spek:spek-api:$spek_version") {
-        exclude group: "org.jetbrains.kotlin"
-    }
-    testImplementation("org.jetbrains.spek:spek-junit-platform-engine:$spek_version") {
-        exclude group: "org.junit.platform"
-        exclude group: "org.jetbrains.kotlin"
-    }
-    testImplementation "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
-    testImplementation "org.junit.platform:junit-platform-engine:$junit_platform_version"
-
-    testImplementation "org.junit.platform:junit-platform-runner:$junit_platform_runner_version"
 }
