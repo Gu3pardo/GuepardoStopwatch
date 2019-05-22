@@ -6,8 +6,12 @@ import io.reactivex.subjects.PublishSubject
 
 interface IClockService {
     val timePublishSubject: PublishSubject<RxTime>
+
     fun initialize(context: Context)
+
     fun start()
+
     fun round()
+
     fun stop()
 }
