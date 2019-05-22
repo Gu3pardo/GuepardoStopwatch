@@ -31,7 +31,7 @@ class ClockService private constructor() : IClockService, Disposable {
         }
     }
 
-    override val timePublishSubject: PublishSubject<RxTime> = PublishSubject.create<RxTime>()!!
+    override val timePublishSubject: PublishSubject<RxTime> = PublishSubject.create<RxTime>()
 
     private object Holder {
         @SuppressLint("StaticFieldLeak")
@@ -85,9 +85,7 @@ class ClockService private constructor() : IClockService, Disposable {
         }
     }
 
-    override fun isDisposed(): Boolean {
-        return this.context === null
-    }
+    override fun isDisposed(): Boolean = this.context === null
 
     override fun dispose() {
         this.stopwatchHandler.removeCallbacks(updateTimerMethod)

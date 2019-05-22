@@ -1,12 +1,15 @@
-# StopMe - development branch
+# StopMe
+
+[![PlayStore](https://img.shields.io/badge/PlayStore-StopMe-blue.svg)](https://play.google.com/store/apps/details?id=guepardoapps.stopme)
+[![Paypal](https://img.shields.io/badge/paypal-donate-blue.svg)](https://www.paypal.me/GuepardoApps)
+
+[![Build](https://img.shields.io/badge/build-success-green.svg)](./releases)
+[![Version](https://img.shields.io/badge/version-1.2.4.190522-blue.svg)](./releases)
+[![API](https://img.shields.io/badge/API-23+-blue.svg)](https://android-arsenal.com/api?level=23)
 
 [![Platform](https://img.shields.io/badge/platform-Android-blue.svg)](https://www.android.com)
-<a target="_blank" href="https://android-arsenal.com/api?level=23" title="API23+"><img src="https://img.shields.io/badge/API-23+-blue.svg" /></a>
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
-<a target="_blank" href="https://www.paypal.me/GuepardoApps" title="Donate using PayPal"><img src="https://img.shields.io/badge/paypal-donate-blue.svg" /></a>
-
-[![Build](https://img.shields.io/badge/build-success-green.svg)](releases/1-2-3-181011.aab)
-[![Version](https://img.shields.io/badge/version-v1.2.3.181011-blue.svg)](releases/1-2-3-181011.aab)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](http://makeapullrequest.com)
 
 Android application for tracking time.
 Example of a floating window and floating button to track time anywhere.
@@ -21,3 +24,27 @@ ___________________________________
 ## License
 
 StopMe is distributed under the MIT license. [See LICENSE](LICENSE.md) for details.
+
+```
+MIT License
+
+Copyright (c) 2018 - 2019 GuepardoApps (Jonas Schubert)
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+```

@@ -10,15 +10,20 @@ class SharedPreferenceController(context: Context) : ISharedPreferenceController
 
     private val cryptoPrefs: CryptoPrefs = CryptoPrefs(context, Constants.sharedPrefName, Constants.sharedPrefKey)
 
+    @ExperimentalUnsignedTypes
     override fun <T : Any> save(key: String, value: T) {
         when (value::class) {
             Boolean::class -> cryptoPrefs.put(key, value as Boolean)
             Byte::class -> cryptoPrefs.put(key, value as Byte)
+            UByte::class -> cryptoPrefs.put(key, value as UByte)
             Double::class -> cryptoPrefs.put(key, value as Double)
             Float::class -> cryptoPrefs.put(key, value as Float)
             Int::class -> cryptoPrefs.put(key, value as Int)
+            UInt::class -> cryptoPrefs.put(key, value as UInt)
             Long::class -> cryptoPrefs.put(key, value as Long)
+            ULong::class -> cryptoPrefs.put(key, value as ULong)
             Short::class -> cryptoPrefs.put(key, value as Short)
+            UShort::class -> cryptoPrefs.put(key, value as UShort)
             String::class -> cryptoPrefs.put(key, value as String)
             else -> {
                 Logger.instance.error(tag, "Invalid generic type of $value")
@@ -26,28 +31,9 @@ class SharedPreferenceController(context: Context) : ISharedPreferenceController
         }
     }
 
-    override fun <T : Any> load(key: String, defaultValue: T): Any {
-        return when (defaultValue::class) {
-            Boolean::class -> cryptoPrefs.getBoolean(key, defaultValue as Boolean)
-            Byte::class -> cryptoPrefs.getByte(key, defaultValue as Byte)
-            Double::class -> cryptoPrefs.getDouble(key, defaultValue as Double)
-            Float::class -> cryptoPrefs.getFloat(key, defaultValue as Float)
-            Int::class -> cryptoPrefs.getInt(key, defaultValue as Int)
-            Long::class -> cryptoPrefs.getLong(key, defaultValue as Long)
-            Short::class -> cryptoPrefs.getShort(key, defaultValue as Short)
-            String::class -> cryptoPrefs.getString(key, defaultValue as String)
-            else -> {
-                Logger.instance.error(tag, "Invalid generic type of $defaultValue")
-                return {}
-            }
-        }
-    }
+    override fun <T : Any> load(key: String, defaultValue: T): T = cryptoPrefs.get(key, defaultValue)
 
-    override fun remove(key: String) {
-        cryptoPrefs.remove(key)
-    }
+    override fun remove(key: String) = cryptoPrefs.remove(key)
 
-    override fun erase() {
-        cryptoPrefs.erase()
-    }
+    override fun erase() = cryptoPrefs.erase()
 }

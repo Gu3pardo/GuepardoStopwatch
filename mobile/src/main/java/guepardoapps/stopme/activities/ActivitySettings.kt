@@ -10,6 +10,7 @@ import guepardoapps.stopme.controller.SystemInfoController
 import guepardoapps.stopme.service.FloatingService
 import kotlinx.android.synthetic.main.side_settings.*
 
+@ExperimentalUnsignedTypes
 class ActivitySettings : Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -18,7 +19,7 @@ class ActivitySettings : Activity() {
         val systemInfoController = SystemInfoController(this)
         val sharedPreferenceController = SharedPreferenceController(this)
 
-        switchBubbleState.isChecked = sharedPreferenceController.load(Constants.bubbleState, false) as Boolean
+        switchBubbleState.isChecked = sharedPreferenceController.load(Constants.bubbleState, false)
         switchBubbleState.setOnCheckedChangeListener { _, isChecked ->
             sharedPreferenceController.save(Constants.bubbleState, isChecked)
             if (isChecked) {

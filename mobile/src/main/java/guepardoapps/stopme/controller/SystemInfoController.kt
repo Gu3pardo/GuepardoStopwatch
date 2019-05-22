@@ -11,11 +11,11 @@ import android.hardware.display.DisplayManager
 import android.net.Uri
 import android.os.Build
 import android.provider.Settings
-import android.support.annotation.NonNull
 import android.view.Display
 import android.view.WindowManager
 import android.view.accessibility.AccessibilityEvent
 import android.view.accessibility.AccessibilityManager
+import androidx.annotation.NonNull
 import guepardoapps.stopme.logging.Logger
 
 class SystemInfoController(@NonNull private val context: Context) : ISystemInfoController {
@@ -29,41 +29,26 @@ class SystemInfoController(@NonNull private val context: Context) : ISystemInfoC
     private val activityManager: ActivityManager = context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
     private val packageManager: PackageManager = context.packageManager
 
-    override fun getApkList(): List<ApplicationInfo> {
-        return packageManager.getInstalledApplications(PackageManager.GET_META_DATA)
-    }
+    override fun getApkList(): List<ApplicationInfo> = packageManager.getInstalledApplications(PackageManager.GET_META_DATA)
 
-    override fun getApkPackageNameList(): List<String> {
-        return getApkList().map { value -> value.packageName }
-    }
+    override fun getApkPackageNameList(): List<String> = getApkList().map { value -> value.packageName }
 
-    override fun isPackageInstalled(packageName: String): Boolean {
-        return getApkPackageNameList().any { value -> value == packageName }
-    }
+    override fun isPackageInstalled(packageName: String): Boolean = getApkPackageNameList().any { value -> value == packageName }
 
     @Suppress("DEPRECATION")
-    override fun isServiceRunning(serviceClassName: String): Boolean {
-        return activityManager.getRunningServices(Integer.MAX_VALUE)!!
-                .any { serviceInfo -> serviceClassName == serviceInfo.service.className }
-    }
+    override fun isServiceRunning(serviceClassName: String): Boolean = activityManager
+            .getRunningServices(Integer.MAX_VALUE)!!
+            .any { serviceInfo -> serviceClassName == serviceInfo.service.className }
 
-    override fun isServiceRunning(serviceClass: Class<*>): Boolean {
-        return isServiceRunning(serviceClass.name)
-    }
+    override fun isServiceRunning(serviceClass: Class<*>): Boolean = isServiceRunning(serviceClass.name)
 
-    override fun isAccessibilityServiceEnabled(serviceId: String): Boolean {
-        return accessibilityManager.getEnabledAccessibilityServiceList(AccessibilityEvent.TYPES_ALL_MASK)!!
-                .any { serviceInfo -> serviceInfo.id == serviceId }
-    }
+    override fun isAccessibilityServiceEnabled(serviceId: String): Boolean = accessibilityManager
+            .getEnabledAccessibilityServiceList(AccessibilityEvent.TYPES_ALL_MASK)!!
+            .any { serviceInfo -> serviceInfo.id == serviceId }
 
-    override fun isBaseActivityRunning(): Boolean {
-        return activityManager.appTasks!!
-                .any { task -> task.taskInfo.baseActivity.packageName == context.packageName }
-    }
+    override fun isBaseActivityRunning(): Boolean = activityManager.appTasks!!.any { task -> task.taskInfo.baseActivity.packageName == context.packageName }
 
-    override fun currentAndroidApi(): Int {
-        return Build.VERSION.SDK_INT
-    }
+    override fun currentAndroidApi(): Int = Build.VERSION.SDK_INT
 
     override fun checkAPI23SystemPermission(permissionRequestId: Int): Boolean {
         if (!Settings.canDrawOverlays(context)) {
@@ -74,28 +59,21 @@ class SystemInfoController(@NonNull private val context: Context) : ISystemInfoC
         return true
     }
 
-    override fun mayReadNotifications(contentResolver: ContentResolver, packageName: String): Boolean {
-        return try {
-            Settings.Secure.getString(contentResolver, "enabled_notification_listeners").contains(packageName)
-        } catch (exception: Exception) {
-            Logger.instance.error(tag, exception)
-            false
-        }
-    }
+    override fun mayReadNotifications(contentResolver: ContentResolver, packageName: String): Boolean =
+            try {
+                Settings.Secure.getString(contentResolver, "enabled_notification_listeners").contains(packageName)
+            } catch (exception: Exception) {
+                Logger.instance.error(tag, exception)
+                false
+            }
 
-    override fun canDrawOverlay(): Boolean {
-        return Settings.canDrawOverlays(context)
-    }
+    override fun canDrawOverlay(): Boolean = Settings.canDrawOverlays(context)
 
-    override fun displayDimension(): Display {
-        val windowManager: WindowManager = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
-        return windowManager.defaultDisplay
-    }
+    override fun displayDimension(): Display = (context.getSystemService(Context.WINDOW_SERVICE) as WindowManager)
+            .defaultDisplay
 
-    override fun isScreeOn(): Boolean {
-        val displayManager: DisplayManager = context.getSystemService(Context.DISPLAY_SERVICE) as DisplayManager
-        return displayManager.displays.any { display -> display.state == Display.STATE_ON }
-    }
+    override fun isScreeOn(): Boolean = (context.getSystemService(Context.DISPLAY_SERVICE) as DisplayManager)
+            .displays.any { display -> display.state == Display.STATE_ON }
 
     override fun setScreenOff(removeFlags: IntArray, timeoutMs: Int) {
         if (!isScreeOn()) {
@@ -135,9 +113,7 @@ class SystemInfoController(@NonNull private val context: Context) : ISystemInfoC
         }
     }
 
-    override fun setBrightness(brightness: Int) {
-        setBrightness((brightness / 255.toDouble()))
-    }
+    override fun setBrightness(brightness: Int) = setBrightness((brightness / 255.toDouble()))
 
     override fun setBrightness(brightness: Double) {
         if (brightness > maxBrightnessLevel) {

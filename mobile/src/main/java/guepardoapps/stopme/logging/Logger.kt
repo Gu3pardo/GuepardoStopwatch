@@ -1,8 +1,8 @@
 package guepardoapps.stopme.logging
 
 import android.content.Context
-import android.support.annotation.NonNull
 import android.util.Log
+import androidx.annotation.NonNull
 import java.sql.Date
 import java.util.*
 

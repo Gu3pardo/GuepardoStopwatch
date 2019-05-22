@@ -67,25 +67,13 @@ class ActivityAbout : MaterialAboutActivity() {
                         .build())
                 .build()
 
-        val payPalCard: MaterialAboutCard = MaterialAboutCard.Builder()
-                .title(R.string.payPalLink_title)
-                .addItem(MaterialAboutActionItem.Builder()
-                        .text(R.string.payPalLink)
-                        .icon(R.drawable.paypal)
-                        .setOnClickAction { startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.payPalLink)))) }
-                        .build())
-                .build()
-
         return MaterialAboutList.Builder()
                 .addCard(infoCard)
                 .addCard(mailCard)
                 .addCard(homePageCard)
                 .addCard(gitHubCard)
-                .addCard(payPalCard)
                 .build()
     }
 
-    override fun getActivityTitle(): CharSequence? {
-        return getString(R.string.about)
-    }
+    override fun getActivityTitle(): CharSequence? = getString(R.string.about)
 }

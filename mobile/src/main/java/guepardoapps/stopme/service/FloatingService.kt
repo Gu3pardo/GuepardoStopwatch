@@ -8,12 +8,12 @@ import android.graphics.PixelFormat
 import android.graphics.drawable.GradientDrawable
 import android.os.Build
 import android.os.IBinder
-import android.support.annotation.RequiresApi
 import android.view.Gravity
 import android.view.MotionEvent
 import android.view.View
 import android.view.WindowManager
 import android.widget.ImageView
+import androidx.annotation.RequiresApi
 import guepardoapps.stopme.R
 import guepardoapps.stopme.common.Constants
 import guepardoapps.stopme.controller.SharedPreferenceController
@@ -25,6 +25,7 @@ import io.reactivex.schedulers.Schedulers
 
 // https://stackoverflow.com/questions/7569937/unable-to-add-window-android-view-viewrootw44da9bc0-permission-denied-for-t#answer-34061521
 
+@ExperimentalUnsignedTypes
 class FloatingService : Service() {
     private val tag: String = FloatingService::class.java.simpleName
 
@@ -79,8 +80,8 @@ class FloatingService : Service() {
     private fun initBubbleView() {
         val sharedPreferenceController = SharedPreferenceController(this)
 
-        bubblePosX = sharedPreferenceController.load(Constants.bubblePosX, Constants.bubbleDefaultPosX) as Int
-        bubblePosY = sharedPreferenceController.load(Constants.bubblePosY, Constants.bubbleDefaultPosY) as Int
+        bubblePosX = sharedPreferenceController.load(Constants.bubblePosX, Constants.bubbleDefaultPosX)
+        bubblePosY = sharedPreferenceController.load(Constants.bubblePosY, Constants.bubbleDefaultPosY)
 
         val params = WindowManager.LayoutParams(
                 WindowManager.LayoutParams.WRAP_CONTENT,

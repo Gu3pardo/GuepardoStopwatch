@@ -14,6 +14,7 @@ import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.side_main.*
 
+@ExperimentalUnsignedTypes
 class ActivityMain : Activity() {
     private val tag: String = ActivityMain::class.java.simpleName
 
@@ -36,10 +37,6 @@ class ActivityMain : Activity() {
                         { error -> Logger.instance.error(tag, error) })
     }
 
-    public override fun onResume() {
-        super.onResume()
-    }
-
     public override fun onPause() {
         super.onPause()
         tryToStartService()
@@ -53,7 +50,7 @@ class ActivityMain : Activity() {
 
     private fun tryToStartService() {
         if (!SystemInfoController(this).isServiceRunning(FloatingService::class.java)
-                && SharedPreferenceController(this).load(Constants.bubbleState, false) as Boolean) {
+                && SharedPreferenceController(this).load(Constants.bubbleState, false)) {
             startService(Intent(this, FloatingService::class.java))
         }
     }
