@@ -15,7 +15,6 @@ import android.view.WindowManager
 import android.widget.ImageView
 import androidx.annotation.RequiresApi
 import guepardoapps.stopme.R
-import guepardoapps.stopme.common.Constants
 import guepardoapps.stopme.controller.SharedPreferenceController
 import guepardoapps.stopme.controller.SystemInfoController
 import guepardoapps.stopme.logging.Logger
@@ -27,23 +26,18 @@ import io.reactivex.schedulers.Schedulers
 
 @ExperimentalUnsignedTypes
 class FloatingService : Service() {
-    private val tag: String = FloatingService::class.java.simpleName
 
-    private lateinit var systemInfoController: SystemInfoController
-    private lateinit var windowManager: WindowManager
-
-    private var bubbleParamsStore: WindowManager.LayoutParams? = null
     private lateinit var bubbleView: ImageView
-    private var bubblePosX: Int = 0
-    private var bubblePosY: Int = 100
-    private var bubbleMoved: Boolean = false
 
     private var stopwatchView: View? = null
+
     private var subscription: Disposable? = null
 
-    override fun onBind(intent: Intent?): IBinder? {
-        return null
-    }
+    private lateinit var systemInfoController: SystemInfoController
+
+    private lateinit var windowManager: WindowManager
+
+    override fun onBind(intent: Intent?): IBinder? = null
 
     override fun onCreate() {
         super.onCreate()
@@ -68,7 +62,7 @@ class FloatingService : Service() {
             windowManager.removeView(stopwatchView)
             windowManager.removeView(bubbleView)
         } catch (exception: Exception) {
-            Logger.instance.error(tag, exception)
+            Logger.instance.error(FloatingService::class.java.simpleName, exception)
         } finally {
             subscription = null
             stopwatchView = null
@@ -80,26 +74,26 @@ class FloatingService : Service() {
     private fun initBubbleView() {
         val sharedPreferenceController = SharedPreferenceController(this)
 
-        bubblePosX = sharedPreferenceController.load(Constants.bubblePosX, Constants.bubbleDefaultPosX)
-        bubblePosY = sharedPreferenceController.load(Constants.bubblePosY, Constants.bubbleDefaultPosY)
+        var bubbleMoved = false
+        var bubbleParamsStore: WindowManager.LayoutParams?
 
         val params = WindowManager.LayoutParams(
                 WindowManager.LayoutParams.WRAP_CONTENT,
                 WindowManager.LayoutParams.WRAP_CONTENT,
                 WindowManager.LayoutParams.TYPE_PHONE,
                 WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
-                PixelFormat.TRANSLUCENT)
-        params.gravity = Gravity.TOP or Gravity.START
-        params.x = bubblePosX
-        params.y = bubblePosY
+                PixelFormat.TRANSLUCENT).apply {
+            gravity = Gravity.TOP or Gravity.START
+            x = sharedPreferenceController.load(getString(R.string.sharedPrefBubblePosX), resources.getInteger(R.integer.sharedPrefBubbleDefaultPosX))
+            y = sharedPreferenceController.load(getString(R.string.sharedPrefBubblePosY), resources.getInteger(R.integer.sharedPrefBubbleDefaultPosY))
+        }
+
         if (systemInfoController.currentAndroidApi() >= Build.VERSION_CODES.O) {
             @RequiresApi(Build.VERSION_CODES.O)
             params.type = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
         } else {
             params.type = WindowManager.LayoutParams.TYPE_SYSTEM_ALERT
         }
-
-        bubbleParamsStore = params
 
         val backgroundShape = GradientDrawable()
         backgroundShape.setColor(resources.getColor(R.color.colorPrimaryDark))
@@ -138,12 +132,11 @@ class FloatingService : Service() {
                         params.x = initialX + (event.rawX - initialTouchX).toInt()
                         params.y = initialY + (event.rawY - initialTouchY).toInt()
 
-                        if (initialX - params.x > 25
-                                || initialY - params.y > 25
-                                || params.x - initialX > 25
-                                || params.y - initialY > 25) {
-                            bubbleMoved = true
-                        }
+                        val minMovement = resources.getInteger(R.integer.bubbleMinMove)
+                        bubbleMoved = initialX - params.x > minMovement
+                                || initialY - params.y > minMovement
+                                || params.x - initialX > minMovement
+                                || params.y - initialY > minMovement
 
                         bubbleParamsStore = params
                         windowManager.updateViewLayout(bubbleView, bubbleParamsStore)
@@ -160,16 +153,10 @@ class FloatingService : Service() {
             if (bubbleMoved) {
                 bubbleMoved = false
 
-                if (params.x > (systemInfoController.displayDimension().width / 2)) {
-                    params.x = systemInfoController.displayDimension().width
-                } else {
-                    params.x = 0
-                }
-                bubblePosX = params.x
-                bubblePosY = params.y
+                params.x = if (params.x > systemInfoController.displayDimension().width / 2) systemInfoController.displayDimension().width else 0
 
-                sharedPreferenceController.save(Constants.bubblePosX, bubblePosX)
-                sharedPreferenceController.save(Constants.bubblePosY, bubblePosY)
+                sharedPreferenceController.save(getString(R.string.sharedPrefBubblePosX), params.x)
+                sharedPreferenceController.save(getString(R.string.sharedPrefBubblePosY), params.y)
 
                 bubbleParamsStore = params
                 windowManager.updateViewLayout(bubbleView, bubbleParamsStore)
@@ -180,7 +167,6 @@ class FloatingService : Service() {
                 clockView.setCloseCallback {
                     subscription?.dispose()
                     subscription = null
-
                     windowManager.removeView(stopwatchView)
                     stopwatchView = null
                 }
@@ -189,28 +175,30 @@ class FloatingService : Service() {
                         .subscribeOn(Schedulers.io())
                         .subscribe(
                                 { response -> clockView.updateViews(response) },
-                                { error -> Logger.instance.error(tag, error) })
+                                { error -> Logger.instance.error(FloatingService::class.java.simpleName, error) })
 
                 val layoutParams = WindowManager.LayoutParams()
-
-                layoutParams.gravity = Gravity.CENTER
+                        .apply {
+                            gravity = Gravity.CENTER
+                            width = WindowManager.LayoutParams.MATCH_PARENT
+                            height = WindowManager.LayoutParams.WRAP_CONTENT
+                            alpha = 1.0f
+                            buttonBrightness = 1f
+                            windowAnimations = android.R.style.Animation_Dialog
+                        }
+                layoutParams.packageName = packageName
                 if (systemInfoController.currentAndroidApi() >= Build.VERSION_CODES.O) {
                     @RequiresApi(Build.VERSION_CODES.O)
                     layoutParams.type = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
                 } else {
                     layoutParams.type = WindowManager.LayoutParams.TYPE_SYSTEM_ALERT
                 }
-                layoutParams.width = WindowManager.LayoutParams.MATCH_PARENT
-                layoutParams.height = WindowManager.LayoutParams.WRAP_CONTENT
-                layoutParams.alpha = 1.0f
-                layoutParams.packageName = packageName
-                layoutParams.buttonBrightness = 1f
-                layoutParams.windowAnimations = android.R.style.Animation_Dialog
 
                 windowManager.addView(stopwatchView, layoutParams)
             }
         }
 
+        bubbleParamsStore = params
         windowManager.addView(bubbleView, bubbleParamsStore)
     }
 }

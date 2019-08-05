@@ -2,13 +2,19 @@ package guepardoapps.stopme.controller
 
 import android.content.Context
 import com.andreacioccarelli.cryptoprefs.CryptoPrefs
-import guepardoapps.stopme.common.Constants
+import guepardoapps.stopme.R
 import guepardoapps.stopme.logging.Logger
 
 class SharedPreferenceController(context: Context) : ISharedPreferenceController {
     private val tag: String = SharedPreferenceController::class.java.simpleName
 
-    private val cryptoPrefs: CryptoPrefs = CryptoPrefs(context, Constants.sharedPrefName, Constants.sharedPrefKey)
+    private val cryptoPrefs: CryptoPrefs = CryptoPrefs(context, context.getString(R.string.sharedPrefName), context.getString(R.string.sharedPrefKey))
+
+    override fun erase() = cryptoPrefs.erase()
+
+    override fun <T : Any> load(key: String, defaultValue: T): T = cryptoPrefs.get(key, defaultValue)
+
+    override fun remove(key: String) = cryptoPrefs.remove(key)
 
     @ExperimentalUnsignedTypes
     override fun <T : Any> save(key: String, value: T) {
@@ -30,10 +36,4 @@ class SharedPreferenceController(context: Context) : ISharedPreferenceController
             }
         }
     }
-
-    override fun <T : Any> load(key: String, defaultValue: T): T = cryptoPrefs.get(key, defaultValue)
-
-    override fun remove(key: String) = cryptoPrefs.remove(key)
-
-    override fun erase() = cryptoPrefs.erase()
 }

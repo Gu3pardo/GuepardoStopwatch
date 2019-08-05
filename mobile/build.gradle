@@ -9,8 +9,8 @@ android {
         applicationId "guepardoapps.stopme"
         minSdkVersion 23
         targetSdkVersion 28
-        versionCode 10204
-        versionName "1.2.4.190522"
+        versionCode 20000
+        versionName "2.0.0.190805"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
     }
@@ -46,12 +46,13 @@ dependencies {
     implementation 'com.google.android.material:material:1.0.0'
     implementation 'androidx.percentlayout:percentlayout:1.0.0'
     implementation 'androidx.recyclerview:recyclerview:1.0.0'
-    implementation 'androidx.annotation:annotation:1.0.2'
+    implementation "androidx.annotation:annotation:1.1.0"
     implementation 'androidx.core:core:1.0.2'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
 
     implementation "com.github.AndreaCioccarelli:CryptoPrefs:$cryptoprefs_version"
     implementation "com.github.daniel-stoneuk:material-about-library:$materialabout_version"
+    implementation "com.github.GuepardoApps:KUlid:$kulid_version"
     implementation "com.github.rey5137:material:$rey_material_version"
     implementation "com.github.TimeXt.TimeXt-Kotlin:timext:$timext_version"
     implementation "com.github.TimeXt.TimeXt-Kotlin:timext-android:$timext_version"

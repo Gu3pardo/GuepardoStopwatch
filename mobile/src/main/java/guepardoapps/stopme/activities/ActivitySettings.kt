@@ -4,7 +4,6 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import guepardoapps.stopme.R
-import guepardoapps.stopme.common.Constants
 import guepardoapps.stopme.controller.SharedPreferenceController
 import guepardoapps.stopme.controller.SystemInfoController
 import guepardoapps.stopme.service.FloatingService
@@ -19,12 +18,12 @@ class ActivitySettings : Activity() {
         val systemInfoController = SystemInfoController(this)
         val sharedPreferenceController = SharedPreferenceController(this)
 
-        switchBubbleState.isChecked = sharedPreferenceController.load(Constants.bubbleState, false)
+        switchBubbleState.isChecked = sharedPreferenceController.load(getString(R.string.sharedPrefBubbleState), false)
         switchBubbleState.setOnCheckedChangeListener { _, isChecked ->
-            sharedPreferenceController.save(Constants.bubbleState, isChecked)
+            sharedPreferenceController.save(getString(R.string.sharedPrefBubbleState), isChecked)
             if (isChecked) {
                 if (systemInfoController.canDrawOverlay()) {
-                    systemInfoController.checkAPI23SystemPermission(Constants.systemPermissionId)
+                    systemInfoController.checkAPI23SystemPermission(resources.getInteger(R.integer.systemPermissionId))
                 } else {
                     startService(Intent(this, FloatingService::class.java))
                 }

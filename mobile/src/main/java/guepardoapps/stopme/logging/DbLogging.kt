@@ -8,6 +8,7 @@ import android.content.Context
 // Helpful
 // https://developer.android.com/training/data-storage/sqlite
 // https://www.techotopia.com/index.php/A_Kotlin_Android_SQLite_Database_Tutorial
+// https://github.com/cbeust/kotlin-android-example/blob/master/app/src/main/kotlin/com/beust/example/DbHelper.kt
 
 internal class DbLogging(context: Context)
     : SQLiteOpenHelper(context, DatabaseName, null, DatabaseVersion) {
@@ -16,7 +17,7 @@ internal class DbLogging(context: Context)
         val createTable = (
                 "CREATE TABLE IF NOT EXISTS $DatabaseTable"
                         + "("
-                        + "$ColumnId INTEGER PRIMARY KEY autoincrement,"
+                        + "$ColumnId TEXT PRIMARY KEY,"
                         + "$ColumnDateTime INTEGER,"
                         + "$ColumnSeverity  INTEGER,"
                         + "$ColumnTag  TEXT,"
@@ -25,33 +26,31 @@ internal class DbLogging(context: Context)
         database.execSQL(createTable)
     }
 
+    override fun onDowngrade(database: SQLiteDatabase, oldVersion: Int, newVersion: Int) = onUpgrade(database, oldVersion, newVersion)
+
     override fun onUpgrade(database: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
         database.execSQL("DROP TABLE IF EXISTS $DatabaseTable")
         onCreate(database)
     }
 
-    override fun onDowngrade(database: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
-        onUpgrade(database, oldVersion, newVersion)
-    }
-
     fun addLog(dbLog: DbLog): Long {
         val values = ContentValues().apply {
+            put(ColumnId, dbLog.id)
             put(ColumnDateTime, dbLog.dateTime.toString())
             put(ColumnSeverity, dbLog.severity.ordinal.toString())
             put(ColumnTag, dbLog.tag)
             put(ColumnDescription, dbLog.description)
         }
 
-        val database = this.writableDatabase
-        return database.insert(DatabaseTable, null, values)
+        return this.writableDatabase.insert(DatabaseTable, null, values)
     }
 
     companion object {
-        private const val DatabaseVersion = 2
-        private const val DatabaseName = "guepardoapps-stopme-logging.db"
+        private const val DatabaseVersion = 1
+        private const val DatabaseName = "guepardoapps-stopme-logging-2.db"
         private const val DatabaseTable = "loggingTable"
 
-        private const val ColumnId = "_id"
+        private const val ColumnId = "id"
         private const val ColumnDateTime = "dateTime"
         private const val ColumnSeverity = "severity"
         private const val ColumnTag = "tag"

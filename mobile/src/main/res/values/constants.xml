@@ -1,0 +1,19 @@
+<resources>
+    <string name="sharedPrefName">GuepardoStopwatchSharedPref</string>
+    <string name="sharedPrefKey">Lf983-d2</string>
+    <string name="sharedPrefBubbleState">BubbleState</string>
+    <string name="sharedPrefBubblePosX">BubblePosX</string>
+    <string name="sharedPrefBubblePosY">BubblePosY</string>
+
+    <string name="bundleDataId">id</string>
+
+    <integer name="systemPermissionId">34567</integer>
+
+    <integer name="sharedPrefBubbleDefaultPosX">0</integer>
+    <integer name="sharedPrefBubbleDefaultPosY">100</integer>
+
+    <integer name="maxParticles">150</integer>
+    <integer name="timeToLive">750</integer>
+
+    <integer name="bubbleMinMove">25</integer>
+</resources>

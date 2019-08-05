@@ -1,41 +1,17 @@
 package guepardoapps.stopme.controller
 
-import android.content.ContentResolver
-import android.content.pm.ApplicationInfo
 import android.view.Display
 
-interface ISystemInfoController {
-    fun getApkList(): List<ApplicationInfo>
+internal interface ISystemInfoController {
+    fun canDrawOverlay(): Boolean
 
-    fun getApkPackageNameList(): List<String>
+    fun checkAPI23SystemPermission(permissionRequestId: Int): Boolean
 
-    fun isPackageInstalled(packageName: String): Boolean
+    fun currentAndroidApi(): Int
+
+    fun displayDimension(): Display
 
     fun isServiceRunning(serviceClassName: String): Boolean
 
     fun isServiceRunning(serviceClass: Class<*>): Boolean
-
-    fun isAccessibilityServiceEnabled(serviceId: String): Boolean
-
-    fun isBaseActivityRunning(): Boolean
-
-    fun currentAndroidApi(): Int
-
-    fun checkAPI23SystemPermission(permissionRequestId: Int): Boolean
-
-    fun mayReadNotifications(contentResolver: ContentResolver, packageName: String): Boolean
-
-    fun canDrawOverlay(): Boolean
-
-    fun displayDimension(): Display
-
-    fun isScreeOn(): Boolean
-
-    fun setScreenOff(removeFlags: IntArray, timeoutMs: Int)
-
-    fun getDisplayBrightness(): Int
-
-    fun setBrightness(brightness: Int)
-
-    fun setBrightness(brightness: Double)
 }

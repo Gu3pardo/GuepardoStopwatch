@@ -14,9 +14,11 @@ import com.danielstone.materialaboutlibrary.items.MaterialAboutActionItem
 import com.danielstone.materialaboutlibrary.model.MaterialAboutCard
 import com.danielstone.materialaboutlibrary.model.MaterialAboutList
 import guepardoapps.stopme.R
-import guepardoapps.stopme.service.MailService
+import guepardoapps.stopme.controller.MailController
 
 class ActivityAbout : MaterialAboutActivity() {
+
+    override fun getActivityTitle(): CharSequence? = getString(R.string.about)
 
     override fun getMaterialAboutList(context: Context): MaterialAboutList {
         val infoCard: MaterialAboutCard = MaterialAboutCard.Builder()
@@ -45,7 +47,7 @@ class ActivityAbout : MaterialAboutActivity() {
                 .addItem(MaterialAboutActionItem.Builder()
                         .text(R.string.email)
                         .icon(R.mipmap.mail)
-                        .setOnClickAction { MailService(this).sendMail("", "", arrayListOf(getString(R.string.email)), true) }
+                        .setOnClickAction { MailController(this).sendMail("", "", arrayListOf(getString(R.string.email)), true) }
                         .build())
                 .build()
 
@@ -74,6 +76,4 @@ class ActivityAbout : MaterialAboutActivity() {
                 .addCard(gitHubCard)
                 .build()
     }
-
-    override fun getActivityTitle(): CharSequence? = getString(R.string.about)
 }

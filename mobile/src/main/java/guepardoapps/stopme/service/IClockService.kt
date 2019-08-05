@@ -9,9 +9,9 @@ interface IClockService {
 
     fun initialize(context: Context)
 
-    fun start()
-
     fun round()
+
+    fun start()
 
     fun stop()
 }

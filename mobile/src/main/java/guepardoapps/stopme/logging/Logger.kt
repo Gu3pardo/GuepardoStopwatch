@@ -3,6 +3,7 @@ package guepardoapps.stopme.logging
 import android.content.Context
 import android.util.Log
 import androidx.annotation.NonNull
+import com.github.guepardoapps.kulid.ULID
 import java.sql.Date
 import java.util.*
 
@@ -26,31 +27,10 @@ internal class Logger private constructor() {
         dbHandler = DbLogging(context)
     }
 
-    fun <T> verbose(@NonNull tag: String, @NonNull description: T) {
-        if (dbHandler != null && loggingEnabled) {
-            Log.v(tag, description.toString())
-            tryToWriteToDatabase(tag, description, Severity.Verbose)
-        }
-    }
-
     fun <T> debug(@NonNull tag: String, @NonNull description: T) {
         if (dbHandler != null && loggingEnabled) {
             Log.d(tag, description.toString())
             tryToWriteToDatabase(tag, description, Severity.Debug)
-        }
-    }
-
-    fun <T> info(@NonNull tag: String, @NonNull description: T) {
-        if (dbHandler != null && loggingEnabled) {
-            Log.i(tag, description.toString())
-            tryToWriteToDatabase(tag, description, Severity.Info)
-        }
-    }
-
-    fun <T> warning(@NonNull tag: String, @NonNull description: T) {
-        if (dbHandler != null && loggingEnabled) {
-            Log.w(tag, description.toString())
-            tryToWriteToDatabase(tag, description, Severity.Warning)
         }
     }
 
@@ -64,7 +44,7 @@ internal class Logger private constructor() {
     private fun <T> tryToWriteToDatabase(@NonNull tag: String, @NonNull description: T, severity: Severity) {
         if (dbHandler != null && writeToDatabaseEnabled) {
             dbHandler?.addLog(
-                    DbLog(-1,
+                    DbLog(ULID.random(),
                             Date(Calendar.getInstance().timeInMillis),
                             severity,
                             tag,

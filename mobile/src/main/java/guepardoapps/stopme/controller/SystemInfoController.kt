@@ -2,53 +2,18 @@ package guepardoapps.stopme.controller
 
 import android.app.Activity
 import android.app.ActivityManager
-import android.content.ContentResolver
 import android.content.Context
 import android.content.Intent
-import android.content.pm.ApplicationInfo
-import android.content.pm.PackageManager
-import android.hardware.display.DisplayManager
 import android.net.Uri
 import android.os.Build
 import android.provider.Settings
+import androidx.annotation.NonNull
 import android.view.Display
 import android.view.WindowManager
-import android.view.accessibility.AccessibilityEvent
-import android.view.accessibility.AccessibilityManager
-import androidx.annotation.NonNull
-import guepardoapps.stopme.logging.Logger
 
-class SystemInfoController(@NonNull private val context: Context) : ISystemInfoController {
-    private val tag: String = SystemInfoController::class.java.simpleName
+internal class SystemInfoController(@NonNull private val context: Context) : ISystemInfoController {
 
-    private val minScreenOffTimeoutMs = 5 * 1000
-    private val minBrightnessLevel = 0.1
-    private val maxBrightnessLevel = 1.0
-
-    private val accessibilityManager: AccessibilityManager = context.getSystemService(Context.ACCESSIBILITY_SERVICE) as AccessibilityManager
-    private val activityManager: ActivityManager = context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
-    private val packageManager: PackageManager = context.packageManager
-
-    override fun getApkList(): List<ApplicationInfo> = packageManager.getInstalledApplications(PackageManager.GET_META_DATA)
-
-    override fun getApkPackageNameList(): List<String> = getApkList().map { value -> value.packageName }
-
-    override fun isPackageInstalled(packageName: String): Boolean = getApkPackageNameList().any { value -> value == packageName }
-
-    @Suppress("DEPRECATION")
-    override fun isServiceRunning(serviceClassName: String): Boolean = activityManager
-            .getRunningServices(Integer.MAX_VALUE)!!
-            .any { serviceInfo -> serviceClassName == serviceInfo.service.className }
-
-    override fun isServiceRunning(serviceClass: Class<*>): Boolean = isServiceRunning(serviceClass.name)
-
-    override fun isAccessibilityServiceEnabled(serviceId: String): Boolean = accessibilityManager
-            .getEnabledAccessibilityServiceList(AccessibilityEvent.TYPES_ALL_MASK)!!
-            .any { serviceInfo -> serviceInfo.id == serviceId }
-
-    override fun isBaseActivityRunning(): Boolean = activityManager.appTasks!!.any { task -> task.taskInfo.baseActivity.packageName == context.packageName }
-
-    override fun currentAndroidApi(): Int = Build.VERSION.SDK_INT
+    override fun canDrawOverlay(): Boolean = Settings.canDrawOverlays(context)
 
     override fun checkAPI23SystemPermission(permissionRequestId: Int): Boolean {
         if (!Settings.canDrawOverlays(context)) {
@@ -59,87 +24,15 @@ class SystemInfoController(@NonNull private val context: Context) : ISystemInfoC
         return true
     }
 
-    override fun mayReadNotifications(contentResolver: ContentResolver, packageName: String): Boolean =
-            try {
-                Settings.Secure.getString(contentResolver, "enabled_notification_listeners").contains(packageName)
-            } catch (exception: Exception) {
-                Logger.instance.error(tag, exception)
-                false
-            }
+    override fun currentAndroidApi(): Int = Build.VERSION.SDK_INT
 
-    override fun canDrawOverlay(): Boolean = Settings.canDrawOverlays(context)
+    override fun displayDimension(): Display = (context.getSystemService(Context.WINDOW_SERVICE) as WindowManager).defaultDisplay
 
-    override fun displayDimension(): Display = (context.getSystemService(Context.WINDOW_SERVICE) as WindowManager)
-            .defaultDisplay
+    @Suppress("DEPRECATION")
+    override fun isServiceRunning(serviceClassName: String): Boolean =
+            (context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager)
+                    .getRunningServices(Integer.MAX_VALUE)!!
+                    .any { serviceInfo -> serviceClassName == serviceInfo.service.className }
 
-    override fun isScreeOn(): Boolean = (context.getSystemService(Context.DISPLAY_SERVICE) as DisplayManager)
-            .displays.any { display -> display.state == Display.STATE_ON }
-
-    override fun setScreenOff(removeFlags: IntArray, timeoutMs: Int) {
-        if (!isScreeOn()) {
-            Logger.instance.info(tag, "Screen is already off")
-            return
-        }
-
-        if (context !is Activity) {
-            Logger.instance.error(tag, "Context is not of type activity")
-            return
-        }
-
-        if (removeFlags.isEmpty()) {
-            Logger.instance.error(tag, "No removeFlags")
-            return
-        }
-
-        if (timeoutMs < minScreenOffTimeoutMs) {
-            Logger.instance.error(tag, "Timeout $timeoutMs is too low (Min:$minScreenOffTimeoutMs)")
-            return
-        }
-
-        Settings.System.putInt(context.contentResolver, Settings.System.SCREEN_OFF_TIMEOUT, timeoutMs)
-        val window = context.window
-        removeFlags.forEach { flag -> window.clearFlags(flag) }
-    }
-
-    override fun getDisplayBrightness(): Int {
-        return try {
-            val contentResolver = context.contentResolver
-            Settings.System.putInt(contentResolver, Settings.System.SCREEN_BRIGHTNESS_MODE,
-                    Settings.System.SCREEN_BRIGHTNESS_MODE_MANUAL)
-            Settings.System.getInt(contentResolver, Settings.System.SCREEN_BRIGHTNESS)
-        } catch (exception: Exception) {
-            Logger.instance.error(tag, exception)
-            -1
-        }
-    }
-
-    override fun setBrightness(brightness: Int) = setBrightness((brightness / 255.toDouble()))
-
-    override fun setBrightness(brightness: Double) {
-        if (brightness > maxBrightnessLevel) {
-            Logger.instance.error(tag, "Brightness too high: $brightness!")
-            return
-        }
-
-        if (brightness < minBrightnessLevel) {
-            Logger.instance.error(tag, "Brightness too low: $brightness!")
-            return
-        }
-
-        if (context !is Activity) {
-            Logger.instance.error(tag, "Context is not of type activity")
-            return
-        }
-
-        try {
-            val contentResolver = context.contentResolver
-            val window = context.window
-            Settings.System.putInt(contentResolver, Settings.System.SCREEN_BRIGHTNESS, (brightness * 255).toInt())
-            val layoutParams = window.attributes
-            layoutParams.screenBrightness = brightness.toFloat()
-            window.attributes = layoutParams
-        } catch (exception: Exception) {
-            Logger.instance.error(tag, exception)
-        }
-    }
+    override fun isServiceRunning(serviceClass: Class<*>): Boolean = isServiceRunning(serviceClass.name)
 }
