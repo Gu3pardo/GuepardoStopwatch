@@ -22,6 +22,7 @@ class ActivityMain : Activity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.side_main)
 
+        clockView.setIsFloating(false)
         clockView.setCloseCallback { finish() }
 
         if (ClockService.instance.isDisposed) {

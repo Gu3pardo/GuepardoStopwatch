@@ -26,7 +26,7 @@ class ActivityAbout : MaterialAboutActivity() {
                         MaterialAboutActionItem.Builder()
                                 .text(R.string.app_name)
                                 .subText(R.string.copyright)
-                                .icon(android.R.drawable.ic_dialog_info)
+                                .icon(R.drawable.baseline_info_black_48)
                                 .build())
                 .addItem(
                         MaterialAboutActionItem.Builder()
@@ -38,7 +38,7 @@ class ActivityAbout : MaterialAboutActivity() {
                         MaterialAboutActionItem.Builder()
                                 .text(R.string.version_title)
                                 .subText(R.string.version)
-                                .icon(android.R.drawable.ic_menu_info_details)
+                                .icon(R.drawable.baseline_star_black_48)
                                 .build())
                 .build()
 
@@ -69,11 +69,20 @@ class ActivityAbout : MaterialAboutActivity() {
                         .build())
                 .build()
 
+        val specialThanksCard: MaterialAboutCard = MaterialAboutCard.Builder()
+                .title(R.string.special_thanks_title)
+                .addItem(MaterialAboutActionItem.Builder()
+                        .text(R.string.special_thanks)
+                        .icon(R.drawable.baseline_favorite_black_48)
+                        .build())
+                .build()
+
         return MaterialAboutList.Builder()
                 .addCard(infoCard)
                 .addCard(mailCard)
                 .addCard(homePageCard)
                 .addCard(gitHubCard)
+                .addCard(specialThanksCard)
                 .build()
     }
 }

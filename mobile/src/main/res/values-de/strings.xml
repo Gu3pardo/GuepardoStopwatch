@@ -1,0 +1,17 @@
+<resources>
+    <string name="time">Zeiten:</string>
+    <string name="timeValues">Wert für Zeit</string>
+    <string name="clear">Löschen</string>
+    <string name="round">Runde</string>
+    <string name="stop">Stop</string>
+    <string name="start">Start</string>
+    <string name="set_bubble_state">Floating Stopwatch aktivieren</string>
+    <string name="share_using">Benutze zum Teilen</string>
+
+    <string name="contentDescription">Dies ist ein Bild</string>
+
+    <string name="about">Über</string>
+    <string name="author_title">Autor</string>
+    <string name="version_title">Version</string>
+    <string name="email_title">E-Mail</string>
+</resources>

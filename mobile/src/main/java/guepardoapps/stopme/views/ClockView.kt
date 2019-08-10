@@ -2,6 +2,7 @@ package guepardoapps.stopme.views
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
@@ -12,7 +13,6 @@ import com.rey.material.widget.FloatingActionButton
 import guepardoapps.stopme.R
 import guepardoapps.stopme.activities.ActivityAbout
 import guepardoapps.stopme.activities.ActivitySettings
-import guepardoapps.stopme.controller.MailController
 import guepardoapps.stopme.controller.NavigationController
 import guepardoapps.stopme.extensions.integerFormat
 import guepardoapps.stopme.logging.Logger
@@ -51,6 +51,14 @@ class ClockView(context: Context, attributeSet: AttributeSet?) : RelativeLayout(
 
         btnClear.setOnClickListener { timeValue.text = "" }
 
+        findViewById<FloatingActionButton>(R.id.btnShare).setOnClickListener {
+            val intent = Intent(Intent.ACTION_SEND).apply {
+                type = "text/plain"
+                putExtra(Intent.EXTRA_SUBJECT, resources.getString(R.string.app_name))
+                putExtra(Intent.EXTRA_TEXT, timeValue.text.toString())
+            }
+            context.startActivity(Intent.createChooser(intent, resources.getString(R.string.share_using)))
+        }
         findViewById<FloatingActionButton>(R.id.btnAbout).setOnClickListener { navigationController.navigate(ActivityAbout::class.java, false) }
         findViewById<FloatingActionButton>(R.id.btnSettings).setOnClickListener { navigationController.navigate(ActivitySettings::class.java, false) }
         findViewById<FloatingActionButton>(R.id.btnClose).setOnClickListener {
@@ -60,7 +68,6 @@ class ClockView(context: Context, attributeSet: AttributeSet?) : RelativeLayout(
                 Logger.instance.error(ClockView::class.java.simpleName, exception)
             }
         }
-        findViewById<FloatingActionButton>(R.id.btnMail).setOnClickListener { MailController(context).sendMail("Times", timeValue.text.toString(), arrayListOf(), true) }
         findViewById<FloatingActionButton>(R.id.btnStart).setOnClickListener {
             ClockService.instance.start()
             btnClear.visibility = View.INVISIBLE
@@ -79,6 +86,12 @@ class ClockView(context: Context, attributeSet: AttributeSet?) : RelativeLayout(
 
     fun setCloseCallback(closeCallback: () -> Unit) {
         this.closeCallback = closeCallback
+    }
+
+    fun setIsFloating(isFloating: Boolean) {
+        findViewById<FloatingActionButton>(R.id.btnShare).visibility = if (isFloating) GONE else VISIBLE
+        findViewById<FloatingActionButton>(R.id.btnAbout).visibility = if (isFloating) GONE else VISIBLE
+        findViewById<FloatingActionButton>(R.id.btnSettings).visibility = if (isFloating) GONE else VISIBLE
     }
 
     fun updateViews(rxTime: RxTime?) {

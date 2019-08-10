@@ -164,6 +164,7 @@ class FloatingService : Service() {
                 stopwatchView = View.inflate(applicationContext, R.layout.side_main, null)
 
                 val clockView: ClockView = stopwatchView!!.findViewById(R.id.clockView)
+                clockView.setIsFloating(true)
                 clockView.setCloseCallback {
                     subscription?.dispose()
                     subscription = null

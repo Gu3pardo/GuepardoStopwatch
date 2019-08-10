@@ -9,8 +9,8 @@ android {
         applicationId "guepardoapps.stopme"
         minSdkVersion 23
         targetSdkVersion 28
-        versionCode 20000
-        versionName "2.0.0.190805"
+        versionCode 20001
+        versionName "2.0.1.190810"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
     }
