@@ -9,8 +9,8 @@ android {
         applicationId "guepardoapps.stopme"
         minSdkVersion 23
         targetSdkVersion 28
-        versionCode 20001
-        versionName "2.0.1.190810"
+        versionCode 20002
+        versionName "2.0.2.191109"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
     }
@@ -39,7 +39,7 @@ repositories {
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
 
-    implementation 'androidx.appcompat:appcompat:1.0.2'
+    implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation 'androidx.cardview:cardview:1.0.0'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
     implementation "androidx.multidex:multidex:2.0.1"
@@ -47,7 +47,7 @@ dependencies {
     implementation 'androidx.percentlayout:percentlayout:1.0.0'
     implementation 'androidx.recyclerview:recyclerview:1.0.0'
     implementation "androidx.annotation:annotation:1.1.0"
-    implementation 'androidx.core:core:1.0.2'
+    implementation 'androidx.core:core:1.1.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
 
     implementation "com.github.AndreaCioccarelli:CryptoPrefs:$cryptoprefs_version"

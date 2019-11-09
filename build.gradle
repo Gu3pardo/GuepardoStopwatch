@@ -2,12 +2,12 @@
 
 buildscript {
     ext.cryptoprefs_version = '1.3.1.0'
-    ext.kotlin_version = '1.3.41'
+    ext.kotlin_version = '1.3.50'
     ext.kulid_version = '1.1.2.0'
     ext.materialabout_version = '2.4.2'
     ext.reactivex_version = '2.1.1'
     ext.rey_material_version = '1.2.4'
-    ext.timext_version = '0.6.1'
+    ext.timext_version = '0.7.0'
 
     repositories {
         google()
@@ -15,7 +15,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.4.2'
+        classpath 'com.android.tools.build:gradle:3.5.2'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
 
         // NOTE: Do not place your application dependencies here; they belong
